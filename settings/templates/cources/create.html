@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block page_name %}
+    Batch
+{% endblock %}
+
+{% block page_description %}
+    Create New Batch
+{% endblock %}
+
+{% block body_content %}
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

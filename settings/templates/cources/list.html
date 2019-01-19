@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block extra_stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/jquery.dataTables.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    {#    <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>#}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+{% endblock %}
+
+{% block page_name %}
+    Batch
+{% endblock %}
+
+{% block page_description %}
+    List all Batch
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Batches</a>
+    </li>
+{% endblock %}
+
+{% block body_content %}
+
+    <div class="pull-right">
+        <a href="{% url 'batches:create' %}" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover table-bordered">
+                        <tbody>
+                        {% for data in datas %}
+                            <tr>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <td>{{ data.name }}</td>
+                                <td>{{ data.code }}</td>
+                                <td>
+                                    <a href="{% url 'batches:edit' data.id %}">Edit</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{% endblock %}
