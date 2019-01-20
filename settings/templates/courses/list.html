@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+
+
+{% block page_name %}
+    Course
+{% endblock %}
+
+{% block page_description %}
+    List all Course
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'courses:list' %}" class="breadcrumb-item">Courses</a>
+
+    </li>
+{% endblock %}
+
+{% block body_content %}
+
+    <div class="pull-right">
+        {#        <a href="{% url 'courses:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
+        <a href="#" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-body">
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="deleteModalLabel">Delete Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="wardenId" id="wardenId">
+                    <h4>Are you sure to delete <b><span id="wardenName"></span></b> ?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block extra_stylesheets %}
+    {#    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/jquery.dataTables.min.css' %}">#}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>
+    {#    <script src="{% static 'js/datatable_custom.js' %}"></script>#}
+    <script>
+        //
+        // Pipelining function for DataTables. To be used to the `ajax` option of DataTables
+        //
+        $.fn.dataTable.pipeline = function (opts) {
+            // Configuration options
+            var conf = $.extend({
+                pages: 5,     // number of pages to cache
+                url: '',      // script url
+                data: null,   // function or object with parameters to send to the server
+                              // matching how `ajax.data` works in DataTables
+                method: 'GET' // Ajax HTTP method
+            }, opts);
+
+            // Private variables for storing the cache
+            var cacheLower = -1;
+            var cacheUpper = null;
+            var cacheLastRequest = null;
+            var cacheLastJson = null;
+
+            return function (request, drawCallback, settings) {
+                var ajax = false;
+                var requestStart = request.start;
+                var drawStart = request.start;
+                var requestLength = request.length;
+                var requestEnd = requestStart + requestLength;
+
+                if (settings.clearCache) {
+                    // API requested that the cache be cleared
+                    ajax = true;
+                    settings.clearCache = false;
+                } else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
+                    // outside cached data - need to make a request
+                    ajax = true;
+                } else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
+                    JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
+                    JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
+                ) {
+                    // properties changed (ordering, columns, searching)
+                    ajax = true;
+                }
+
+                // Store the request for checking next time around
+                cacheLastRequest = $.extend(true, {}, request);
+
+                if (ajax) {
+                    // Need data from the server
+                    if (requestStart < cacheLower) {
+                        requestStart = requestStart - (requestLength * (conf.pages - 1));
+
+                        if (requestStart < 0) {
+                            requestStart = 0;
+                        }
+                    }
+
+                    cacheLower = requestStart;
+                    cacheUpper = requestStart + (requestLength * conf.pages);
+
+                    request.start = requestStart;
+                    request.length = requestLength * conf.pages;
+
+                    // Provide the same `data` options as DataTables.
+                    if (typeof conf.data === 'function') {
+                        // As a function it is executed with the data object as an arg
+                        // for manipulation. If an object is returned, it is used as the
+                        // data object to submit
+                        var d = conf.data(request);
+                        if (d) {
+                            $.extend(request, d);
+                        }
+                    } else if ($.isPlainObject(conf.data)) {
+                        // As an object, the data given extends the default
+                        $.extend(request, conf.data);
+                    }
+
+                    settings.jqXHR = $.ajax({
+                        "type": conf.method,
+                        "url": conf.url,
+                        "data": request,
+                        "dataType": "json",
+                        "cache": false,
+                        "success": function (json) {
+                            cacheLastJson = $.extend(true, {}, json);
+
+                            if (cacheLower != drawStart) {
+                                json.data.splice(0, drawStart - cacheLower);
+                            }
+                            if (requestLength >= -1) {
+                                json.data.splice(requestLength, json.data.length);
+                            }
+
+                            drawCallback(json);
+                        }
+                    });
+                } else {
+                    json = $.extend(true, {}, cacheLastJson);
+                    json.draw = request.draw; // Update the echo for each response
+                    json.data.splice(0, requestStart - cacheLower);
+                    json.data.splice(requestLength, json.data.length);
+
+                    drawCallback(json);
+                }
+            }
+        };
+
+        // Register an API method that will empty the pipelined data, forcing an Ajax
+        // fetch on the next draw (i.e. `table.clearPipeline().draw()`)
+        $.fn.dataTable.Api.register('clearPipeline()', function () {
+            return this.iterator('table', function (settings) {
+                settings.clearCache = true;
+            });
+        });
+
+        $(document).ready(function () {
+            $('#example').DataTable({
+
+                "processing": true,
+                "serverSide": true,
+                "ajax": $.fn.dataTable.pipeline({
+                    url: '{% url 'courses:json_list' %}',
+                    pages: 5 // number of pages to cache
+                }),
+                "columns": [
+                    {"data": "name"},
+                    {"data": "code"},
+                    {
+                        data: 'id',
+                        searchable: false,
+                        orderable: false,
+                        render: function (data) {
+                            return '<a class="btn btn-primary btn-sm" href="/courses/edit/' + data + '/">Edit</a>&nbsp;&nbsp;'
+                                + '<a class="btn btn-danger btn-sm" href="/courses/delete/' + data + '/">Delete</a>';
+
+                        }
+                    }
+                ],
+                "columnDefs": [
+                    {"width": "20%", "targets": 2}
+                ],
+                "order": [0, "asc"],
+            });
+        });
+
+        $('body').on('click', '.add-batch', function () {
+            jQuery.ajax({
+                url: '{% url 'courses:create_json' %}',
+                cache: false,
+                error: function () {
+                    console.log("error");
+                },
+                success: function (data) {
+                    $('.modal').modal('show');
+                    $('.modal-dialog').addClass('modal-lg modal-dialog-centered');
+                    $('.modal-body').html(data);
+                    $('.modal-title').hide();
+                    $('.modal-footer').html('');
+                },
+                type: 'GET'
+            });
+        })
+
+
+    </script>
+{% endblock %}

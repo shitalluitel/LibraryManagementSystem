@@ -1,10 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'adminlte/base.html' %}
+{% load staticfiles %}
 
-</body>
-</html>
+
+{% block title %}Library Management System{% endblock %}
+
+{% block messages %}
+    {% include 'adminlte/lib/_messages.html' %}
+{% endblock %}
+
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_stylesheets %}
+
+    {% endblock %}
+{% endblock %}
+
+{% block content_header %}
+    <div class="container-fluid">
+        <section class="content-header"
+                 style="margin-bottom: 5px;padding-bottom: 15px; border-bottom: 1px solid #bcbcbc;">
+            <h1>
+                {% block page_name %}{% endblock %}
+                <small>{% block page_description %}{% endblock %}</small>
+            </h1>
+            {% block breadcrumbs %}
+{#                <nav aria-label="breadcrumb">#}
+                    <ol class="breadcrumb ">
+                        <li class="breadcrumb-item ml-1"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        {% block breadcrumbLink %}
+                        {% endblock %}
+                    </ol>
+{#                </nav>#}
+            {% endblock %}
+        </section>
+    </div>
+{% endblock %}
+
+{% block nav_header %}
+    {% include 'main_pages/_main_header.html' %}
+{% endblock %}
+
+{% block nav_sidebar %}
+    {% include 'main_pages/_main_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+    {% block body_content %}
+
+    {% endblock %}
+{% endblock %}
+
+{% block extra_foot %}
+
+    <script>
+        $(document).ready(function () {
+            $(".alert").delay(10000).fadeOut(500, function () {
+                $(this).alert('close');
+            });
+        });
+    </script>
+
+    {% block  extra_script %}
+    {% endblock %}
+
+{% endblock %}
+
+{% block nav_footer %}
+    {% include 'main_pages/_main_footer.html' %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'jquery/dist/jquery-ui.min.js' %}"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %} "></script>
+    <script src="{% static 'admin-lte/dist/js/app.min.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+{% endblock %}

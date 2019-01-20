@@ -1,10 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'adminlte/lib/_main_sidebar.html' %}
+
+{% block user_panel %}{% endblock %}
+
+{% block nav_links %}
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-user"></i>
+            <span>Student</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
+            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
+            <li><a href="pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
+            <li><a href="pages/UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
+            <li><a href="pages/UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
+            <li><a href="pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
+        </ul>
+    </li>
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Book</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
+            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
+            <li><a href="pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
+            <li><a href="pages/UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
+            <li><a href="pages/UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
+            <li><a href="pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
+        </ul>
+    </li>
+
+    <li class="treeview menu-open">
+        <a href="#">
+            <i class="fa fa-cogs"></i>
+            <span>Setting</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+
+            <li class="treeview">
+                <a href="#"><i class="fa fa-circle-o"></i>Course
+                    <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{% url 'courses:create' %}"><i class="fa fa-circle-o"></i>Add Course</a></li>
+                    <li><a href="{% url 'courses:list' %}"><i class="fa fa-circle-o"></i>View Course</a></li>
+
+                </ul>
+            </li>
+
+            <li class="treeview">
+                <a href="#"><i class="fa fa-circle-o"></i>Batch
+                    <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{% url 'batches:create' %}"><i class="fa fa-circle-o"></i>Add Batch</a></li>
+                    <li><a href="{% url 'batches:list' %}"><i class="fa fa-circle-o"></i>View Batch</a></li>
+
+                </ul>
+            </li>
+
+        </ul>
+    </li>
+{% endblock nav_links %}

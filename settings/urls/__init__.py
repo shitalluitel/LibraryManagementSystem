@@ -1,1 +1,2 @@
-from . import courses
+from .courses import *
+from .batches import *

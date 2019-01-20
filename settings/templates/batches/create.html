@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block page_name %}
+    Batch
+{% endblock %}
+
+{% block page_description %}
+    Create New Batch
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                            <label class="control-label" for="exampleInputEmail1">Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <span id="helpBlock2" class="help-block">{{ form.code.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group {% if form.code.errors %} has-error {% endif %}">
+                            <label class="control-label" for="exampleInputEmail1">Code</label>
+                            {{ form.code }}
+                            {% if form.code.errors %}
+                                <span id="helpBlock2" class="help-block">{{ form.code.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
