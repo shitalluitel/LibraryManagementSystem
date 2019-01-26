@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from books.views import home
+from books.views import list_book
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', home, name="home"),
+    url(r'^$', list_book, name="home"),
     url(r'^books/', (include('books.urls'))),
     url(r'^batches/', include('settings.urls.batches')),
     url(r'^courses/', include('settings.urls.courses')),
+    url(r'^students/', include('students.urls')),
 ]

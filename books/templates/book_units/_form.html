@@ -1,0 +1,17 @@
+<form id="book-form" action="{% url 'books:create_book_units' pk=pk %}" method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="text-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    <div class="form-group {% if form.units.errors or form.non_field_errors %} has-error {% endif %}">
+        <label class="control-label" for="exampleInputEmail1">{{ form.units.label }}</label>
+        {{ form.units }}
+        {% if form.units.errors %}
+            <span id="helpBlock2" class="help-block">{{ form.units.errors }}</span>
+        {% endif %}
+    </div>
+
+    <input type="submit" id="book-submit" class="btn btn-primary" value="Submit">
+</form>

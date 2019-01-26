@@ -42,16 +42,20 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['*', 'localhost'])
 # Application definition
 
 INSTALLED_APPS = [
+    'students',
+    'widget_tweaks',
     'settings',
     'books',
     'borrows',
     'django_adminlte',
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djangoformsetjs',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'LibraryManagementSystem.middleware.RequestMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryManagementSystem.urls'
@@ -86,23 +91,23 @@ WSGI_APPLICATION = 'LibraryManagementSystem.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': env('DB_HOST'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'HOST': env('DB_HOST'),
-#         'NAME': env('DB_NAME'),
-#         'USER': env('DB_USER'),
-#         'PASSWORD': env('DB_PASSWORD'),
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -156,9 +161,9 @@ MESSAGE_TAGS = {
 
 LOGIN_URL = '/users/login/'
 
-# AUTH_USER_MODEL = 'users.User'
-# AUTHENTICATION_BACKENDS = (
-#     'users.backends.MyEmailBackend',  # our custom authentication backend
-# )
+AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = (
+    'users.backends.MyEmailBackend',  # our custom authentication backend
+)
 
 BASE_URL = env('BASE_URL')

@@ -14,8 +14,8 @@ def create(request):
 
     if request.method == "POST":
         if form.is_valid():
-            batch = form.save()
-            messages.success(request, "Successfully created '{}' batch".format(batch.name))
+            course = form.save()
+            messages.success(request, "Successfully created '{}' course".format(course.name))
             return redirect("courses:create")
 
     context['form'] = form
@@ -28,8 +28,8 @@ def create_json(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
-            batch = form.save()
-            messages.success(request, "Successfully created '{}' batch".format(batch.name))
+            course = form.save()
+            messages.success(request, "Successfully created '{}' course".format(course.name))
             return redirect("courses:list")
         else:
             return create(request=request)
@@ -49,8 +49,8 @@ def edit(request, pk):
 
     if request.method == "POST":
         if form.is_valid():
-            batch = form.save()
-            messages.success(request, "Successfully updated '{}' batch".format(batch.name))
+            course = form.save()
+            messages.success(request, "Successfully updated '{}' course".format(course.name))
             return redirect("courses:list")
 
     context['form'] = form

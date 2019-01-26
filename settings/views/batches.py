@@ -2,25 +2,29 @@ import json
 
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db import transaction, IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 
-from settings.models import Batch
-from settings.forms import BatchForm
+from settings.models import Batch, CourseBatch
+from settings.forms import BatchForm, CourseBatchCreateForm
 
 
 def create(request):
     context = {}
     form = BatchForm(request.POST or None)
 
-    print("thisadn")
-
     if request.method == "POST":
         if form.is_valid():
-            batch = form.save()
-            messages.success(request, "Successfully created '{}' batch".format(batch.name))
-            return redirect("batches:create")
+            try:
+                with transaction.atomic():
+                    batch = form.save()
+                    # messages.success(request, "Successfully created '{}' batch".format(batch.name))
+                    return redirect("batches:course_batch", pk=batch.id)
+            except IntegrityError:
+                messages.error(request, 'Unable to save this record.')
+                return redirect('batches:create')
 
     context['form'] = form
     return render(request, 'batches/create.html', context)
@@ -32,9 +36,14 @@ def create_json(request):
     if request.method == 'POST':
         form = BatchForm(request.POST)
         if form.is_valid():
-            batch = form.save()
-            messages.success(request, "Successfully created '{}' batch".format(batch.name))
-            return redirect("courses:list")
+            try:
+                with transaction.atomic():
+                    batch = form.save()
+                    # messages.success(request, "Successfully created '{}' batch".format(batch.name))
+                    return redirect("batches:course_batch", pk=batch.id)
+            except IntegrityError:
+                messages.error(request, 'Unable to save this record.')
+                return redirect('batches:create')
         else:
             return create(request=request)
     context['form'] = form
@@ -117,3 +126,28 @@ def delete(request, pk):
     context['next'] = reverse('batches:list')
     context['page_name'] = "Batch"
     return render(request, 'snippets/delete.html', context)
+
+
+def create_course_batch(request, pk):
+    form = CourseBatchCreateForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    for course in form.cleaned_data.get('course'):
+                        course_batch = CourseBatch()
+                        course_batch.course = course
+                        course_batch.batch_id = pk
+                        course_batch.save()
+                    return redirect('batches:list')
+            except IntegrityError:
+                print('integrity error')
+                return redirect('batches:course_batch', pk=pk)
+
+    return render(request, 'batches/course_batch_create.html', {'form': form})
+
+
+def get_batch_list(request, pk):
+    batch = Batch.objects.filter(course__id=pk)
+    empty_label = "Batch"
+    return render(request, 'snippets/option.html', {'datas': batch, 'empty_label': empty_label})

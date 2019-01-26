@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Batch
+{% endblock %}
+
+{% block page_description %}
+    Create New Batch
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                <div class="form-group">
+                                    {{ form.course }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.batch }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+
+                        <div class="table-responsive">
+                            <table class="table form-table table-bordered table-sm">
+                                <thead class="text-center">
+                                <tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Date of Birth</th>
+                                    <th class="text-center">Phone No.</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Photo</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for student in formset %}
+                                    <tr class="item">
+                                        <td>{{ student.name }}</td>
+                                        <td>{{ student.dob }}</td>
+                                        <td>{{ student.phone_no }}</td>
+                                        <td>{{ student.address }}</td>
+                                        <td>{{ student.photo | add_class:'form-control formset-field' }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm remove-form-row"
+                                                    id="{{ formset.prefix }}">
+                                                {% if student.id %}
+                                                    {{ student.id | add_class:"formset-field" }} {% endif %}
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="9"
+                                        style="border-left: none!important; border-right: none !important; border-bottom: none!important;">
+                                        <button type="button" class="btn btn-sm btn-success add-form-row"
+                                                id="{{ formset.prefix }}">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            {{ formset.management_form }}
+                        </div>
+
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'js/customFormset.js' %}"></script>
+    <script>
+        $('body').on('change', '#id_course', function () {
+            var selected_value = $(this).children('option:selected').val();
+            if (selected_value) {
+                $.ajax({
+                    url: '/batches/' + selected_value + "/batch-list/",
+                    cache: false,
+                    error: function () {
+                        console.log("error");
+                    },
+                    success: function (data) {
+                        $('#id_batch').empty().append(data);
+                    },
+                    type: 'GET'
+                });
+            } else {
+                $('#id_batch').html('<option value selected>Select</option>').val('');
+            }
+        });
+    </script>
+{% endblock %}

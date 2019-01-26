@@ -10,6 +10,6 @@ urlpatterns = [
     url('^json_list/$', batches.json_list, name="json_list"),
     url('^edit/(?P<pk>\d+)/$', batches.edit, name="edit"),
     url('^delete/(?P<pk>\d+)/$', batches.delete, name="delete"),
+    url('^(?P<pk>\d+)/course/$', batches.create_course_batch, name='course_batch'),
+    url('^(?P<pk>\d+)/batch-list/$', batches.get_batch_list, name='get_batch_list'),
 ]
-
-

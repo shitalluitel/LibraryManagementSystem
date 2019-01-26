@@ -1,5 +1,7 @@
 from django import forms
-from settings.models import Batch
+from django.forms import ModelMultipleChoiceField
+
+from settings.models import Batch, CourseBatch, Course
 
 
 class BatchForm(forms.ModelForm):
@@ -18,3 +20,16 @@ class BatchForm(forms.ModelForm):
             'code': 'Batch Code',
         }
 
+
+class CourseBatchCreateForm(forms.Form):
+    course = forms.ModelMultipleChoiceField(
+        queryset=Course.objects.all(),
+        label="Choose courses for this batch."
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    #
+    #     self.fields['course'] = ModelMultipleChoiceField(queryset=Course.objects.all())
+        self.fields['course'].widget.attrs['class'] = 'form-control'
+        self.fields['course'].empty_label = "Choose a countries"

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block page_name %}
     Book
@@ -26,16 +27,28 @@
                 <div class="panel-body">
                     <form method="post">
                         {% csrf_token %}
-
-                        <div class="form-group {% if form.name.errors %} has-error {% endif %}">
-                            <label class="control-label" for="exampleInputEmail1">Book Name</label>
+                        {% if form.non_field_errors %}
+                            <div class="text-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group {% if form.name.errors or form.non_field_errors %} has-error {% endif %}">
+                            <label class="control-label" for="exampleInputEmail1">Book Code</label>
                             {{ form.name }}
                             {% if form.name.errors %}
                                 <span id="helpBlock2" class="help-block">{{ form.code.errors }}</span>
                             {% endif %}
                         </div>
 
-                        <div class="form-group {% if form.author.errors %} has-error {% endif %}">
+                        <div class="form-group {% if form.code.errors or form.non_field_errors %} has-error {% endif %}">
+                            <label class="control-label" for="exampleInputEmail1">Book Name</label>
+                            {{ form.code }}
+                            {% if form.code.errors %}
+                                <span id="helpBlock2" class="help-block">{{ form.code.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group {% if form.author.errors or form.non_field_errors %} has-error {% endif %}">
                             <label class="control-label" for="exampleInputEmail1">{{ form.author.label }}</label>
                             {{ form.author }}
                             {% if form.author.errors %}
@@ -43,7 +56,7 @@
                             {% endif %}
                         </div>
 
-                        <div class="form-group {% if form.publisher.errors %} has-error {% endif %}">
+                        <div class="form-group {% if form.publisher.errors or form.non_field_errors %} has-error {% endif %}">
                             <label class="control-label" for="exampleInputEmail1">{{ form.publisher.label }}</label>
                             {{ form.publisher }}
                             {% if form.publisher.errors %}
@@ -51,7 +64,7 @@
                             {% endif %}
                         </div>
 
-                        <div class="form-group {% if form.edition.errors %} has-error {% endif %}">
+                        <div class="form-group {% if form.edition.errors or form.non_field_errors %} has-error {% endif %}">
                             <label class="control-label" for="exampleInputEmail1">{{ form.edition.label }}</label>
                             {{ form.edition }}
                             {% if form.edition.errors %}

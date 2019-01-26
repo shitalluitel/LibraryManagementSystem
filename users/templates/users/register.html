@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block extra_stylesheets %}
+{% load widget_tweaks %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block breadcrumbHead %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+
+    <div class="row ">
+        <div class="offset-md-3 col-md-6">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-dismissible alert-{{ message.tags }}">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <p>{{ message }}</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="offset-md-2 col-md-8">
+
+            {% if form.non_field_errors %}
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% endif %}
+
+            <div class="form-wrap">
+                <div class="col-md-12">
+                    <div class="text-center mb-3" style="font-size: 32px;">
+                        Registraton
+                    </div>
+                    <hr class="hr-small">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-horizontal">
+                            <div class="form-group {% if form.first_name.errors or form.last_name.errors %}has-error{% endif %}">
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label text-left">{{ form.first_name.label }}</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% if form.first_name.errors %}
+                                          {{ form.first_name|add_class:'is-invalid' }}
+                                          <div class="invalid-feedback">
+                                              {{ form.first_name.errors }}
+                                          </div>
+                                        {% else %}
+                                          {{ form.first_name }}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="control-label text-left">{{ form.last_name.label }}</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                      {% if form.last_name.errors %}
+                                        {{ form.last_name| add_class:'is-invalid' }}
+                                        <div class="invalid-feedback">
+                                            {{ form.last_name.errors }}
+                                        </div>
+                                      {% else %}
+                                        {{ form.last_name }}
+                                      {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label text-left">{{ form.email.label }}</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                      {% if form.email.errors %}
+                                        {{ form.email| add_class:'is-invalid' }}
+                                        <div class="invalid-feedback">
+                                            {{ form.email.errors }}
+                                        </div>
+                                      {% else %}
+                                        {{ form.email }}
+                                      {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group {% if form.username.errors %}has-error{% endif %}">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label text-left">{{ form.username.label }}</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        {% if form.username.errors %}
+                                          {{ form.username| add_class:'is-invalid' }}
+                                          <div class="invalid-feedback">
+                                              {{ form.username.errors }}
+                                          </div>
+                                        {% else %}
+                                          {{ form.username }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group {% if form.password.errors or form.confirm_password.errors %}has-error{% endif %}">
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="control-label text-left">{{ form.password.label }}</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% if form.confirm_password.errors %}
+                                          {{ form.password|add_class:'is-invalid' }}
+                                        {% else %}
+                                          {{ form.password }}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="control-label text-left">{{ form.confirm_password.label }}</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% if form.confirm_password.errors %}
+                                          {{ form.confirm_password|add_class:'is-invalid' }}
+                                          <div class="invalid-feedback">
+                                              {{ form.confirm_password.errors }}
+                                          </div>
+                                        {% else %}
+                                          {{ form.confirm_password }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button type="submit" name="submit" class="btn btn-block btn-primary ">Submit
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block page_name %}
+    Batch
+{% endblock %}
+
+{% block page_description %}
+    Create New Batch
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_script %}
+    <script>
+        $('body').on('change', '#id_course', function () {
+            var selected_value = $(this).children('option:selected').val();
+            if (selected_value) {
+                $.ajax({
+                    url: '/batches/' + selected_value + "/batch-list/",
+                    cache: false,
+                    error: function () {
+                        console.log("error");
+                    },
+                    success: function (data) {
+                        $('#id_batch').empty().append(data);
+                    },
+                    type: 'GET'
+                });
+            } else {
+                $('#id_batch').html('<option value selected>Select</option>').val('');
+            }
+        });
+    </script>
+{% endblock %}

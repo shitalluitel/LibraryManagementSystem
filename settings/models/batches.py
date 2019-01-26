@@ -2,6 +2,8 @@ import json
 
 from django.db import models
 
+from settings.models import Course
+
 
 class BatchQuerySet(models.QuerySet):
     def serialize(self):
@@ -19,6 +21,7 @@ class Batch(models.Model):
     code = models.CharField(max_length=10, unique=True)
 
     is_deleted = models.BooleanField(default=False)
+    course = models.ManyToManyField(Course, through='CourseBatch', blank=True)
 
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
@@ -42,3 +45,14 @@ class Batch(models.Model):
         }
         data = json.dumps(data)
         return data
+
+
+class CourseBatch(models.Model):
+    course = models.ForeignKey(Course, related_name='course_batches', on_delete=models.DO_NOTHING, null=True)
+    batch = models.ForeignKey(Batch, related_name='course_batches', on_delete=models.DO_NOTHING, null=True)
+
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return "{}-{}".format(self.course.code, self.batch.name)

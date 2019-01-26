@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block page_name %}
+    Book Unit
+{% endblock %}
+
+{% block page_description %}
+    Add
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'books:list_book_unit' pk=pk %}" class="breadcrumb-item">Book</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="text-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group {% if form.units.errors or form.non_field_errors %} has-error {% endif %}">
+                            <label class="control-label" for="exampleInputEmail1">{{ form.units.label }}</label>
+                            {{ form.units }}
+                            {% if form.units.errors %}
+                                <span id="helpBlock2" class="help-block">{{ form.units.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <input type="submit" id="book-submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

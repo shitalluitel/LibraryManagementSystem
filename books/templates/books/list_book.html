@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+
+
+{% block page_name %}
+    Book
+{% endblock %}
+
+{% block page_description %}
+    List
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="#" class="breadcrumb-item disabled">Books</a>
+
+    </li>
+{% endblock %}
+
+{% block body_content %}
+
+    <div class="pull-right">
+        {#        <a href="{% url 'books:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
+        <a href="#" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-body">
+                    <table id="books-list" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Edition</th>
+                            <th>Author</th>
+                            <th>Publisher</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="wardenId" id="wardenId">
+                            <h4>Are you sure to delete <b><span id="wardenName"></span></b> ?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block extra_stylesheets %}
+    {#    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/jquery.dataTables.min.css' %}">#}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>
+    {#    <script src="{% static 'js/datatable_custom.js' %}"></script>#}
+    <script>
+        $(document).ready(function () {
+            var table = $('#books-list').DataTable({
+                "aLengthMenu": [
+                    [10, 25, 50, 100],
+                    [10, 25, 50, 100]
+                ],
+                "bServerSide": true,
+                "bProcessing": true,
+                "sPaginationType": "simple_numbers",
+
+                "sAjaxSource": '{{ url }}',
+
+                "columnDefs": [
+                    {"width": "15%", "targets": 5}
+                ],
+                "columns": [
+                    {
+                        data: 'name',
+                        render: function (nTd, sData, oData, iRow, iCol) {
+                            return '<a class="book-unit" href="/books/book-units/' + oData.id + '">' + oData.name + '</a>';
+
+                        },
+                    },
+                    {"data": "code"},
+                    {"data": "edition"},
+                    {"data": "author"},
+                    {"data": "publisher"},
+                    {
+                        data: 'id',
+                        searchable: false,
+                        orderable: false,
+                        {% if status %}
+                            render: function (data) {
+                                return '<a class="btn btn-primary btn-sm" href="/books/edit/' + data + '/">Edit</a>&nbsp;&nbsp;'
+                                    + '<a class="btn btn-danger btn-sm" href="/books/delete/' + data + '/">Delete</a>';
+
+                            },
+                        {% else %}
+                            render: function (data) {
+                                return '<a class="btn btn-primary btn-sm" href="/books/undo/' + data + '/">Undo</a>';
+
+                            }
+                        {% endif %}
+                    }
+                ],
+
+
+                "language": {
+                    "lengthMenu": "Display _MENU_",
+                    "info": "Page _PAGE_ of _PAGES_ (Found _MAX_ records.)",
+                    "infoEmpty": "List of records.",
+                    "infoFiltered": ""
+                },
+            });
+
+        });
+
+        $('body').on('click', '.add-batch', function () {
+            jQuery.ajax({
+                url: '{% url 'books:create_json' %}',
+                cache: false,
+                error: function () {
+                    console.log("error");
+                },
+                success: function (data) {
+                    $('.modal').modal('show');
+                    $('.modal-dialog').addClass('modal-lg modal-dialog-centered');
+                    $('.modal-body').html(data);
+                    $('.modal-title').hide();
+                    $('.modal-footer').html('');
+                    $('.modal-header').html(' <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span\n' +
+                        '                                    aria-hidden="true">&times;</span></button>\n' +
+                        '                            <h4 class="modal-title" id="deleteModalLabel">Book <small> Create</small></h4> ');
+                },
+                type: 'GET'
+            });
+        });
+
+    </script>
+{% endblock %}

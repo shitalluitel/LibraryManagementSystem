@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block page_name %}
+    Batch
+{% endblock %}
+
+{% block page_description %}
+    Create New Batch
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

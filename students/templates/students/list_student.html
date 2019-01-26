@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Batch
+{% endblock %}
+
+{% block page_description %}
+    Create New Batch
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                <div class="form-group">
+                                    {{ form.course }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.batch }}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="my-4">
+
+                    <div class="table-responsive">
+                        <table id="student-table" class="table form-table table-bordered table-sm">
+                            <thead class="text-center">
+                            <tr>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Date of Birth</th>
+                                <th class="text-center">Phone No.</th>
+                                <th class="text-center">Address</th>
+                                <th class="text-center">Photo</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_script %}
+    <script>
+        $('body').on('change', '#id_course', function () {
+            var selected_value = $(this).children('option:selected').val();
+            if (selected_value) {
+                $.ajax({
+                    url: '/batches/' + selected_value + "/batch-list/",
+                    cache: false,
+                    error: function () {
+                        console.log("error");
+                    },
+                    success: function (data) {
+                        $('#id_batch').empty().append(data);
+                    },
+                    type: 'GET'
+                });
+            } else {
+                $('#id_batch').html('<option value selected>Select</option>').val('');
+            }
+        });
+
+
+        $('body').on('change', '#id_batch', function () {
+            var batch = $(this).children('option:selected').val();
+
+
+        });
+    </script>
+
+{% endblock %}
