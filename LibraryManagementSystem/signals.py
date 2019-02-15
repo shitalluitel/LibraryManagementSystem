@@ -13,7 +13,8 @@ def audit_log(sender, instance, **kwargs):
 
     try:
         request = RequestMiddleware(get_response=None)
-        table = sender._meta.verbose_name
+        # table = sender._meta.verbose_name
+        table = None
         request = request.thread_local.current_request
         user = request.user
 

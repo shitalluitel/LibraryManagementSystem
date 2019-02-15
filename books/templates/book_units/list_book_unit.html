@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-
-
-
 {% block page_name %}
     Book
 {% endblock %}
@@ -21,12 +18,14 @@
 
 {% block body_content %}
 
-    <div class="pull-right">
-        {#        <a href="{% url 'books:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
-        <a href="#" class="btn add-book-unit btn-sm btn-primary"
-           style="margin-bottom: 10px;">Add New</a>
-    </div>
+    {% if perms.books.add_bookunit %}
+        <div class="pull-right">
+            {#        <a href="{% url 'books:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
+            <a href="#" class="btn add-book-unit btn-sm btn-primary"
+               style="margin-bottom: 10px;">Add New</a>
+        </div>
 
+    {% endif %}
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
@@ -37,9 +36,40 @@
                         <tr>
                             <th>Acc No.</th>
                             <th>Status</th>
-                            <th></th>
+                            <th style="width: 15%">Action</th>
                         </tr>
                         </thead>
+                        <tbody>
+                        {% for data in datas %}
+                            <tr>
+                                <td>{{ data.acc_no }}</td>
+                                <td>
+                                    <span style="padding: 5px; border-radius:10px; " class="{% if data.is_available %}
+                                            bg-green-active
+                                        {% elif data.is_booked %}
+                                            bg-blue
+                                        {% elif data.is_deleted %}
+                                            bg-red
+                                        {% elif data.is_pending %}
+                                            bg-yellow
+                                        {% endif %}">{{ data.status }}</span>
+                                </td>
+                                {% if perms.books.delete_bookunit %}
+                                    <td class="text-center">
+                                        <a class="btn btn-danger btn-sm"
+                                           href="{% url 'books:delete_book_units' data.id %}">Delete</a>
+                                    </td>
+                                {% elif perms.books.order_bookunit %}
+                                    <td class="text-center">
+                                        <a class="btn btn-success {% if not data.is_available %} disabled {% endif %} btn-sm"
+                                           href="{% url 'borrows:order_bookunit' data.id %}">Order</a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
                     </table>
                 </div>
                 <!-- /.box-body -->
@@ -49,26 +79,28 @@
     </div>
 
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="modal-content">
-                        <div class="modal-header">
+    {% if perms.books.add_bookunit %}
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="modal-content">
+                            <div class="modal-header">
 
-                        </div>
-                        <div class="modal-body">
+                            </div>
+                            <div class="modal-body">
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Continue</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Continue</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
 
 {% endblock %}
@@ -85,56 +117,34 @@
     <script>
         $(document).ready(function () {
             var table = $('#books-unit-list').DataTable({
-                ajax: "{{ url }}",
-                columns: [
-                    {data: "acc_no"},
-                    {
-                        data: "status",
-                        render: function (data) {
-                            if (data == "available") {
-                                return '<span class="text-success ">' + data + '</span>'
-                            } else if (data == "pending") {
-                                return '<span class="text-warning ">' + data + '</span>'
-                            } else {
-                                return '<span class="text-danger ">' + data + '</span>'
-                            }
-                        }
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searchable": true,
+            });
+        });
+
+        {% if perms.book.add_bookunit %}
+            $('body').on('click', '.add-book-unit', function () {
+                jQuery.ajax({
+                    url: '{% url 'books:create_book_units_json' pk=pk %}',
+                    cache: false,
+                    error: function () {
+                        console.log("error");
                     },
-                    {
-                        data: "id",
-                        sortable:false,
-                        orderable:false,
-                        render: function (data) {
-                            return '<a class="btn btn-danger btn-sm" href="/books/delete/book-units/' + data + '/">Delete</a>';
-                        }
-                    }
-                ],
-                "columnDefs": [
-                    {"width": "15%", "targets": 2}
-                ],
-
+                    success: function (data) {
+                        $('.modal').modal('show');
+                        $('.modal-dialog').addClass('modal-lg modal-dialog-centered');
+                        $('.modal-body').html(data);
+                        $('.modal-title').hide();
+                        $('.modal-footer').html('');
+                        $('.modal-header').html(' <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span\n' +
+                            '                                    aria-hidden="true">&times;</span></button>\n' +
+                            '                            <h4 class="modal-title" id="deleteModalLabel">Book <small> Create</small></h4> ');
+                    },
+                    type: 'GET'
+                });
             });
-        });
-
-        $('body').on('click', '.add-book-unit', function () {
-            jQuery.ajax({
-                url: '{% url 'books:create_book_units_json' pk=pk %}',
-                cache: false,
-                error: function () {
-                    console.log("error");
-                },
-                success: function (data) {
-                    $('.modal').modal('show');
-                    $('.modal-dialog').addClass('modal-lg modal-dialog-centered');
-                    $('.modal-body').html(data);
-                    $('.modal-title').hide();
-                    $('.modal-footer').html('');
-                    $('.modal-header').html(' <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span\n' +
-                        '                                    aria-hidden="true">&times;</span></button>\n' +
-                        '                            <h4 class="modal-title" id="deleteModalLabel">Book <small> Create</small></h4> ');
-                },
-                type: 'GET'
-            });
-        });
+        {% endif %}
     </script>
 {% endblock %}

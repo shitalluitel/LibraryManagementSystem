@@ -2,8 +2,6 @@
 {% load staticfiles %}
 
 
-
-
 {% block page_name %}
     Book
 {% endblock %}
@@ -21,10 +19,12 @@
 
 {% block body_content %}
 
-    <div class="pull-right">
-        {#        <a href="{% url 'books:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
-        <a href="#" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>
-    </div>
+    {% if perms.books.add_book %}
+        <div class="pull-right">
+            {#        <a href="{% url 'books:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
+            <a href="#" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>
+        </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-xs-12">
@@ -39,9 +39,53 @@
                             <th>Edition</th>
                             <th>Author</th>
                             <th>Publisher</th>
-                            <th></th>
+                            {% if perms.books.change_book or perms.book.delete_book %}
+                                <th></th>
+                            {% endif %}
                         </tr>
                         </thead>
+                        <tbody>
+                        {% for data in datas %}
+                            <tr>
+                                <td>
+                                    <a class="book-unit"
+                                       href="{% url 'books:list_book_unit' data.id %}">{{ data.name }}</a>
+                                </td>
+                                <td>
+                                    {{ data.code }}
+                                </td>
+                                <td>
+                                    {{ data.edition }}
+                                </td>
+                                <td>
+                                    {{ data.author }}
+                                </td>
+                                <td>
+                                    {{ data.publisher }}
+                                </td>
+
+                                {% if perms.books.change_book or perms.books.delete_book %}
+                                    <td>
+                                        {% if status %}
+                                            {% if perms.books.change_book %}
+                                                <a class="btn btn-primary btn-sm"
+                                                   href="{% url 'books:edit_book' data.id %}">Edit</a>
+                                            {% elif perms.books.delete_book %}
+                                                <a class="btn btn-danger btn-sm"
+                                                   href="{% url 'books:delete_book' data.id %}">Delete</a>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if perms.books.delete_book %}
+                                                <a class="btn btn-primary btn-sm"
+                                                   href="{% url 'books:undo_book' data.id %}">Undo</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
                 </div>
                 <!-- /.box-body -->
@@ -51,28 +95,30 @@
     </div>
 
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="modal-content">
-                        <div class="modal-header">
+    {% if perms.books.add_book %}
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="modal-content">
+                            <div class="modal-header">
 
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" name="wardenId" id="wardenId">
-                            <h4>Are you sure to delete <b><span id="wardenName"></span></b> ?</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Continue</button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="wardenId" id="wardenId">
+                                <h4>Are you sure to delete <b><span id="wardenName"></span></b> ?</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Continue</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
+    {% endif %}
 
 {% endblock %}
 
@@ -87,82 +133,36 @@
     {#    <script src="{% static 'js/datatable_custom.js' %}"></script>#}
     <script>
         $(document).ready(function () {
-            var table = $('#books-list').DataTable({
-                "aLengthMenu": [
-                    [10, 25, 50, 100],
-                    [10, 25, 50, 100]
-                ],
-                "bServerSide": true,
-                "bProcessing": true,
-                "sPaginationType": "simple_numbers",
+            $('#books-list').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searchable": true,
+            });
+        });
 
-                "sAjaxSource": '{{ url }}',
-
-                "columnDefs": [
-                    {"width": "15%", "targets": 5}
-                ],
-                "columns": [
-                    {
-                        data: 'name',
-                        render: function (nTd, sData, oData, iRow, iCol) {
-                            return '<a class="book-unit" href="/books/book-units/' + oData.id + '">' + oData.name + '</a>';
-
-                        },
+        {% if perms.books.add_book %}
+            $('body').on('click', '.add-batch', function () {
+                jQuery.ajax({
+                    url: '{% url 'books:create_json' %}',
+                    cache: false,
+                    error: function () {
+                        console.log("error");
                     },
-                    {"data": "code"},
-                    {"data": "edition"},
-                    {"data": "author"},
-                    {"data": "publisher"},
-                    {
-                        data: 'id',
-                        searchable: false,
-                        orderable: false,
-                        {% if status %}
-                            render: function (data) {
-                                return '<a class="btn btn-primary btn-sm" href="/books/edit/' + data + '/">Edit</a>&nbsp;&nbsp;'
-                                    + '<a class="btn btn-danger btn-sm" href="/books/delete/' + data + '/">Delete</a>';
-
-                            },
-                        {% else %}
-                            render: function (data) {
-                                return '<a class="btn btn-primary btn-sm" href="/books/undo/' + data + '/">Undo</a>';
-
-                            }
-                        {% endif %}
-                    }
-                ],
-
-
-                "language": {
-                    "lengthMenu": "Display _MENU_",
-                    "info": "Page _PAGE_ of _PAGES_ (Found _MAX_ records.)",
-                    "infoEmpty": "List of records.",
-                    "infoFiltered": ""
-                },
+                    success: function (data) {
+                        $('.modal').modal('show');
+                        $('.modal-dialog').addClass('modal-lg modal-dialog-centered');
+                        $('.modal-body').html(data);
+                        $('.modal-title').hide();
+                        $('.modal-footer').html('');
+                        $('.modal-header').html(' <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span\n' +
+                            '                                    aria-hidden="true">&times;</span></button>\n' +
+                            '                            <h4 class="modal-title" id="deleteModalLabel">Book <small> Create</small></h4> ');
+                    },
+                    type: 'GET'
+                });
             });
-
-        });
-
-        $('body').on('click', '.add-batch', function () {
-            jQuery.ajax({
-                url: '{% url 'books:create_json' %}',
-                cache: false,
-                error: function () {
-                    console.log("error");
-                },
-                success: function (data) {
-                    $('.modal').modal('show');
-                    $('.modal-dialog').addClass('modal-lg modal-dialog-centered');
-                    $('.modal-body').html(data);
-                    $('.modal-title').hide();
-                    $('.modal-footer').html('');
-                    $('.modal-header').html(' <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span\n' +
-                        '                                    aria-hidden="true">&times;</span></button>\n' +
-                        '                            <h4 class="modal-title" id="deleteModalLabel">Book <small> Create</small></h4> ');
-                },
-                type: 'GET'
-            });
-        });
+        {% endif %}
 
     </script>
 {% endblock %}

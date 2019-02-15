@@ -4,10 +4,6 @@
 {% load widget_tweaks %}
 {% block content %}
 
-{% block breadcrumbHead %}
-
-{% endblock %}
-
 <div class="container">
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
@@ -94,4 +90,7 @@
     </div>
 </div>
 
+{% endblock %}
+{% block footer %}
+{% include "dashboardFooter.html" %}
 {% endblock %}

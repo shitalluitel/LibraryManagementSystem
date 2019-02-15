@@ -42,20 +42,21 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['*', 'localhost'])
 # Application definition
 
 INSTALLED_APPS = [
-    'students',
-    'widget_tweaks',
-    'settings',
-    'books',
-    'borrows',
-    'django_adminlte',
-    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
     'djangoformsetjs',
+    'students',
+    'widget_tweaks',
+    'settings',
+    'books',
+    'borrows',
+    'django_adminlte',
+    # 'guardian',
 ]
 
 MIDDLEWARE = [
@@ -163,7 +164,12 @@ LOGIN_URL = '/users/login/'
 
 AUTH_USER_MODEL = 'users.User'
 AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
     'users.backends.MyEmailBackend',  # our custom authentication backend
 )
 
 BASE_URL = env('BASE_URL')
+# ROLEPERMISSIONS_MODULE = 'LibraryManagementSystem.roles'
+
+# ROLEPERMISSIONS_REDIRECT_TO_LOGIN = True
+# ROLEPERMISSIONS_REGISTER_ADMIN = True

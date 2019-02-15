@@ -39,6 +39,10 @@ class Book(models.Model):
         verbose_name_plural = "Books"
         ordering = ['name']
         unique_together = ('name', 'code', 'author', 'publisher', 'edition')
+        permissions = (
+            ('view_books', "Can view books"),
+            ('undo_book', "Can undo books"),
+        )
 
     def __str__(self):
         return self.name
@@ -78,6 +82,12 @@ class BookUnit(models.Model):
         verbose_name = "Book Unit"
         verbose_name_plural = "Book Units"
         ordering = ['acc_no']
+        permissions = (
+            ('view_bookunit', 'Can view bookunit'),
+            ('undo_bookunit', 'Can undo bookunit'),
+            ('order_bookunit', 'Can order bookunit'),
+            ('assign_bookunit', 'Can assign bookunit'),
+        )
 
     def __str__(self):
         return "Book: {}, Acc: {}".format(self.book, self.acc_no)

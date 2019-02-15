@@ -30,6 +30,7 @@ class Course(models.Model):
         ordering = ['name']
         verbose_name = "Course"
         verbose_name_plural = "Courses"
+        # app_label = 'courses'
 
     def __str__(self):
         return self.name

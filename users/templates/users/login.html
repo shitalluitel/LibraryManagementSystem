@@ -1,26 +1,185 @@
-{% extends 'base.html' %}
-{% load staticfiles %}
-{% block extra_stylesheets %}
+{#{% extends 'base.html' %}#}
+{#{% load staticfiles %}#}
+{##}
+
+{##}
+{#{% block messages %}#}
+{#    {% include 'adminlte/lib/_messages.html' %}#}
+{#{% endblock %}#}
+{##}
+{#{% block content_header %}#}
+{#{% endblock %}#}
+{##}
+{#{% block nav_header %}#}
+{#{% endblock %}#}
+{##}
+{#{% block nav_sidebar %}#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <div class="container">#}
+{#        <div class="page-wrapper mb-5 pt-5">#}
+{#            <main class="main-wrapper">#}
+{#                <div class="container-fluid">#}
+{#                    <div class="row">#}
+{#                        <div class="offset-md-6 col-md-6">#}
+{#                            {% if form.non_field_errors %}#}
+{#                                <div class="row">#}
+{#                                    <div class="col-md-12">#}
+{#                                        <div class="alert alert-danger">#}
+{#                                            <ul>#}
+{#                                                {% for error in form.non_field_errors %}#}
+{#                                                    <li>{{ error }}</li>#}
+{#                                                {% endfor %}#}
+{#                                            </ul>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{##}
+{#                {% if messages %}#}
+{#                <div class="row">#}
+{#                    <div class="offset-md-4 col-md-4">#}
+{##}
+{#                        {% for message in messages %}#}
+{#                        <div class="alert alert-dismissible alert-{{ message.tags }}" role="alert">#}
+{#                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>#}
+{#                            {{ message }}#}
+{#                        </div>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{#                </div>#}
+{#                {% endif %}#}
+{##}
+{##}
+{#                    <div class="row">#}
+{#                        <div class="offset-md-4 col-md-4 ">#}
+{#                            <div class="login-form-wrap">#}
+{#                                <div class="row school-title-wrap  mt-3">#}
+{##}
+{#                                    <div class="col-md-12 mt-2">#}
+{#                                        <h3 class="text-center"#}
+{#                                            style="font-weight: 700; font-size: xx-large;"><span#}
+{#                                                class="text-primary">LMS <br> <small>Library Management System</small></span>#}
+{#                                        </h3>#}
+{#                                    </div>#}
+{#                                    <!--<div class="col-md-12">#}
+{#                                    </div>-->#}
+{#                                </div>#}
+{#                                <div class="mb-5 mt-3">#}
+{#                                    <hr class="hr-small">#}
+{#                                </div>#}
+{#                                <div class="row">#}
+{#                                    <div class="col-md-12">#}
+{#                                        <form class="login-form" method="POST">#}
+{#                                            {% csrf_token %}#}
+{##}
+{#                                            <div class="form-group {% if form.username.errors %}has-error{% endif %}">#}
+{#                                                <div class="input-group input-group-sm"><span class="input-group-addon"><em#}
+{#                                                        class="fa fa-user"></em></span>#}
+{#                                                    {{ form.username }}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{##}
+{#                                            <div class="form-group {% if form.password.errors %}has-error{% endif %}">#}
+{#                                                <div class="input-group input-group-sm"><span class="input-group-addon"><em#}
+{#                                                        class="fa fa-lock"></em></span>#}
+{#                                                    {{ form.password }}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{##}
+{##}
+{#                                            <div class="form-group">#}
+{#                                                <button class="btn btn-primary btn-sm btn-block" name="submit"#}
+{#                                                        type="submit">#}
+{#                                                    <em class="fa fa-sign-in"></em> Login#}
+{#                                                </button>#}
+{#                                                <div class="mt-2 text-center">#}
+{#                                                    <a class="text-decoration-none text-primary"#}
+{#                                                       href="{% url 'users:send_password_reset_email' %}">Forgot#}
+{#                                                        password?</a>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </form>#}
+{#                                    </div>#}
+{#                                </div>#}
+{##}
+{#                                <div class="row">#}
+{#                                    <div class="col-md-12 text-center mt-3">#}
+{#                                        <a style="font-size: x-large; font-weight: 500;"#}
+{#                                           class="text-decoration-none text-primary"#}
+{#                                           href="{% url 'users:user_register' %}">Create an account</a>#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="col-md-12 text-center">#}
+{#                                        <p class="mt-2 mb-4">Powered by <a href="#" target="_blank"#}
+{#                                                                           class="text-decoration-none text-primary">Khaja</a>#}
+{#                                        </p>#}
+{##}
+{#                                    </div>#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            </main>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}
+{##}
+{#{% block nav_footer %}#}
+{#{% endblock %}#}
+{##}
+
+
+{% extends "adminlte/base.html" %}
+{% load i18n static %}
+
+{% block title %}Login | Library Management System{% endblock %}
+{% block body_class %}login-page{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 
-{% block breadcrumbHead %}
-
-{% endblock %}
-
-{% block navigaton %}{% endblock %}
-
-{% block content %}
+{% block body %}
 
     <div class="container">
-        <div class="page-wrapper mb-5 pt-5">
-            <main class="main-wrapper my-5">
-                <div class="container-fluid my-5">
+        <div class="page-wrapper">
+            <main class="main-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-offset-6 col-md-6">
+                            {% if form.non_field_errors %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                {% for error in form.non_field_errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+
                     {% if messages %}
                         <div class="row">
-                            <div class="offset-md-4 col-md-4">
+                            <div class="col-md-offset-4 col-md-4">
+
                                 {% for message in messages %}
-                                    <div class="alert alert-dismissible alert-danger" role="alert">
+                                    <div class="alert alert-dismissible alert-{{ message.tags }}" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span></button>
                                         {{ message }}
@@ -32,86 +191,69 @@
 
 
                     <div class="row">
-                        <div class="offset-md-4 col-md-4 my-3">
-                            <div class="card ">
+                        <div class="col-md-offset-4 col-md-4 ">
+                            <div class="login-form-wrap">
+                                <div class="row school-title-wrap  mt-3">
 
-                                <div class="card-body">
-                                    <h5 class="card-title">Log in</h5>
+                                    <div class="col-md-12 mt-2">
+                                        <h3 class="text-center"
+                                            style="font-weight: 700; font-size: xx-large;"><span
+                                                class="text-primary">LMS <br> <small>Library Management System</small></span>
+                                        </h3>
+                                    </div>
+                                    <!--<div class="col-md-12">
+                                    </div>-->
+                                </div>
+                                <div class="mb-5 mt-3">
+                                    <hr class="hr-small">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form class="login-form" method="POST">
+                                            {% csrf_token %}
 
-                                    <div class="login-form-wrap">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <form class="login-form" method="POST">
-                                                    {% csrf_token %}
+                                            <div class="form-group {% if form.username.errors %}has-error{% endif %}">
+                                                <div class="input-group input-group-sm"><span class="input-group-addon"><em
+                                                        class="fa fa-user"></em></span>
+                                                    {{ form.username }}
+                                                </div>
+                                            </div>
 
-                                                    <div class="form-group {% if form.username.errors %}has-error{% endif %}">
-                                                        <div class="input-group input-group-sm">
-                                                            <!--<span class="input-group-addon">
-                                                              <em class="fa fa-user"></em>
-                                                            </span> -->
-                                                            {{ form.username }}
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group {% if form.password.errors %}has-error{% endif %}">
-                                                        <div class="input-group input-group-sm">
-                                                            <!--<span class="input-group-addon">
-                                                              <em class="fa fa-lock"></em>
-                                                            </span> -->
-                                                            {{ form.password }}
-
-                                                        </div>
-                                                        <input type="checkbox" onclick="myFunction()"> Show Password
-                                                    </div>
+                                            <div class="form-group {% if form.password.errors %}has-error{% endif %}">
+                                                <div class="input-group input-group-sm"><span class="input-group-addon"><em
+                                                        class="fa fa-lock"></em></span>
+                                                    {{ form.password }}
+                                                </div>
+                                            </div>
 
 
-                                                    <div class="form-group mt-2">
-                                                        <button class="btn btn-success btn-sm btn-block" name="submit"
-                                                                type="submit">
-                                                            <em class="fas fa-sign-in"></em> Login
-                                                        </button>
-                                                        <div class="mt-2 text-center">
-                                                            <a class="text-decoration-none text-success"
-                                                               href="{% url 'users:send_password_reset_email' %}">Forgot
-                                                                password?</a>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                            <div class="form-group">
+                                                <button class="btn btn-primary btn-sm btn-block" name="submit"
+                                                        type="submit">
+                                                    <em class="fa fa-sign-in"></em> Login
+                                                </button>
 
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <p class="mt-2 mb-4">Developed by <a href="http://shitalluitel.herokuapp.com" target="_blank"
+                                                                             class="text-decoration-none text-primary">Shital
+                                            Babu Luitel</a>
+                                        </p>
+
+                                    </div>
 
                                 </div>
                             </div>
-
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-12 text-center mt-3">
-                            {# <a style="font-size: x-large; font-weight: 500;" class="text-decoration-none text-success" href="{% url 'users:user_register'%}">Create an account</a> #}
-                            <a style="font-size: x-large; font-weight: 500;"
-                               class="text-decoration-none text-success" href="#">Create an account</a>
-
-                        </div>
                     </div>
                 </div>
+            </main>
         </div>
-
     </div>
-    </div>
-    </main>
-    </div>
-    </div>
-{% endblock %}
-{% block extra_script %}
-    <script>
-        function myFunction() {
-            var x = document.getElementById("id_password");
-            if (x.type === "password") {
-                x.type = "text";
-            } else {
-                x.type = "password";
-            }
-        }
-
-    </script>
 {% endblock %}

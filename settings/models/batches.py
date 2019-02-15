@@ -33,6 +33,14 @@ class Batch(models.Model):
         ordering = ['name']
         verbose_name = "Batch"
         verbose_name_plural = "Batches"
+        # app_label = 'batches'
+        permissions = (
+            ('add_group', 'Can add group'),
+            ('change_group', 'Can change group'),
+            ('delete_group', 'Can delete group'),
+            ('view_group', 'Can view group'),
+            ('view_batch', 'Can view batch'),
+        )
 
     def __str__(self):
         return self.name

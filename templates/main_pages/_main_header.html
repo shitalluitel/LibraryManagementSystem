@@ -1,43 +1,10 @@
 {% extends 'adminlte/lib/_main_header.html' %}
 {% load adminlte_helpers i18n %}
+{% load staticfiles %}
 
 {% block logo_text %}Birat Kshitiz College{% endblock %}
 
 {% block logo_text_small %}<b>BKC</b>{% endblock %}
-
-{#{% block nav_bar_center %}#}
-{#    <!-- Navbar Right Menu -->#}
-{#    <div class="navbar-custom-menu">#}
-{#        <ul class="nav navbar-nav">#}
-{##}
-{#            <!-- Notifications Menu -->#}
-{#            <li class="dropdown notifications-menu">#}
-{#                <!-- Menu toggle button -->#}
-{#                <a href="#" class="dropdown-toggle" data-toggle="dropdown">#}
-{#                    <i class="fa fa-bell-o"></i>#}
-{#                    <span class="label label-warning">10</span>#}
-{#                </a>#}
-{#                <ul class="dropdown-menu">#}
-{#                    <li class="header">You have 10 notifications</li>#}
-{#                    <li>#}
-{#                        <!-- Inner Menu: contains the notifications -->#}
-{#                        <ul class="menu">#}
-{#                            <li>#}
-{#                                <!-- start notification -->#}
-{#                                <a href="#">#}
-{#                                    <i class="fa fa-users text-aqua"></i> 5 new members joined today#}
-{#                                </a>#}
-{#                            </li>#}
-{#                            <!-- end notification -->#}
-{#                        </ul>#}
-{#                    </li>#}
-{#                    <li class="footer"><a href="#">View all</a></li>#}
-{#                </ul>#}
-{#            </li>#}
-{#        </ul>#}
-{#    </div>#}
-
-{#{% endblock %}#}
 
 {% block nav_custom_menu %}
     <div class="navbar-custom-menu">
@@ -70,7 +37,7 @@
 
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="{% avatar_url size=50 %}" class="user-image" alt="User Image">
+                            <img src="{% static 'image/avatar.png' %}" class="user-image" alt="User Image">
                             <span class="hidden-xs">{% firstof request.user.get_short_name request.user.get_username %}</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -95,7 +62,7 @@
                                            class="btn btn-default btn-flat">{% trans 'Change password' %}</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{% block logout_url %}{% logout_url %}{% endblock %}"
+                                        <a href="{% url 'users:logout_user' %}"
                                            class="btn btn-default btn-flat">Sign out</a>
                                     </div>
                                 </li>

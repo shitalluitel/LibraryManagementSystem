@@ -1,0 +1,117 @@
+/*css for login.html page*/
+/*starts here*/
+
+body{
+    background-color: white !important;
+}
+
+.login-form-wrap .school-title-wrap h3 {
+    font-size: 24px;
+}
+
+.main-wrapper {
+    margin-top: 20px;
+    min-height: 460px;
+}
+
+.page-wrapper .page-login-wrap {
+    margin-top: 150px;
+    /*margin-bottom: 150px;*/
+}
+
+.page-wrapper .login-form-wrap {
+    border: 1px solid #d4d4d4;
+    box-shadow: 2px 2px 4px #d4d4d4;
+    background: #ffffff;
+    padding: 15px;
+}
+
+.page-wrapper .school-logo-wrap {
+    border-right: 1px solid #d4d4d4;
+    margin-right: 16px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+@media (max-width: 767px) {
+    .page-wrapper .school-logo-wrap {
+        border-right: none;
+    }
+}
+
+.logo-height {
+    height: auto;
+    width: 200px;
+    margin: 0 auto;
+    display: block;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .logo-height {
+        margin-left: -20px;
+    }
+}
+
+.alert-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+/*upload btn*/
+
+.btn-file {
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+
+.btn-file > input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    font-size: 23px;
+    height: 100%;
+    width: 100%;
+    direction: ltr;
+    cursor: pointer;
+}
+
+input[type=file] {
+    display: block;
+}
+
+.form-wrap {
+    border: 1px solid #d4d4d4;
+    box-shadow: 2px 2px 4px #d4d4d4;
+    background: #ffffff;
+    padding: 15px;
+}
+
+.hr-small {
+    border: 1px solid #bfbfbf;
+    width: 75px;
+    border-radius: 10px;
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+
+.text-decoration-none {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/*ends here*/
+

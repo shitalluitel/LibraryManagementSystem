@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^create/book-units/(?P<pk>\d+)/$', views.create_book_units, name="create_book_units"),
     url(r'^json/create/book-units/(?P<pk>\d+)/$', views.create_book_units_json, name="create_book_units_json"),
     url(r'^delete/book-units/(?P<pk>\d+)/$', views.delete_book_units, name="delete_book_units"),
+    # url(r'^order/(?P<pk>\d+)$', views.order_bookunit, name="order_bookunit"),
 ]

@@ -9,14 +9,16 @@
 #
 # admin.site.register(User)
 
-from django import forms
+
 from django.contrib import admin
-# from django.contrib.auth.models import Group
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.models import Group
 
-from users.models import User, Logs
+from users.models import User
 
-admin.site.register(User)
-# admin.site.unregister(Group)
-admin.site.register(Logs)
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('email', 'username', 'is_admin')
+
+
+admin.site.register(User, UserAdmin)
+admin.site.unregister(Group)

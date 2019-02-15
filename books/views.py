@@ -1,14 +1,19 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 from django.db import transaction, IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 
 # Create your views here.
+# from rolepermissions.decorators import has_permission_decorator
+
+
 from books.forms import BookForm, BookUnitAddForm, BookUnitDeleteForm
-from books.models import Book, BookUnit
+from books.models import Book, BookUnit, BOOK_STATUS
+from borrows.models import Borrow
 
 
 def home(request):
@@ -16,6 +21,7 @@ def home(request):
     return render(request, 'page.html')
 
 
+@permission_required('books.add_book')
 def create_book(request):
     context = {}
     form = BookForm(request.POST or None)
@@ -35,6 +41,7 @@ def create_book(request):
     return render(request, 'books/create.html', context)
 
 
+@permission_required('books.add_book')
 def create_json(request):
     context = {}
     form = BookForm(request.POST or None)
@@ -58,11 +65,14 @@ def create_json(request):
     return render(request, 'books/_form.html', context)
 
 
+@permission_required('books.view_books')
 def list_book(request):
+    datas = Book.objects.filter(is_deleted=False)
     url = reverse("books:json_list_book")
-    return render(request, 'books/list_book.html', {'url': url, 'status': True})
+    return render(request, 'books/list_book.html', {'url': url, 'status': True, 'datas': datas})
 
 
+@permission_required('books.view_books')
 def json_response(request, datas):
     totalRecords = datas.count()
     q_string = request.GET.get('sSearch')
@@ -93,21 +103,25 @@ def json_response(request, datas):
     return HttpResponse(json_datas, content_type='application/json', status=200)
 
 
+@permission_required('books.view_books')
 def json_list(request):
     datas = Book.objects.filter(is_deleted=False)
     return json_response(request=request, datas=datas)
 
 
+@permission_required('books.delete_book')
 def book_trash(request):
     url = reverse("books:json_trash_book")
     return render(request, 'books/list_book.html', {'url': url, 'status': False})
 
 
+@permission_required('books.delete_book')
 def json_trash(request):
     datas = Book.objects.filter(is_deleted=True)
     return json_response(request=request, datas=datas)
 
 
+@permission_required('books.change_book')
 def edit_book(request, pk):
     context = {}
     try:
@@ -127,6 +141,7 @@ def edit_book(request, pk):
     return render(request, 'books/create.html', context)
 
 
+@permission_required('books.delete_book')
 def delete_book(request, pk):
     context = {}
     if request.method == "POST":
@@ -150,6 +165,7 @@ def delete_book(request, pk):
     return render(request, 'snippets/delete.html', context)
 
 
+@permission_required('books.undo_book')
 def undo_book(request, pk):
     context = {}
     if request.method == "POST":
@@ -170,11 +186,14 @@ def undo_book(request, pk):
     return render(request, 'snippets/delete.html', context)
 
 
+@permission_required('books.view_bookunit')
 def list_book_unit(request, pk):
-    context = {'pk': pk, 'url': reverse("books:list_book_unit_json", kwargs={'pk': pk})}
+    datas = BookUnit.objects.filter(is_deleted=False)
+    context = {'pk': pk, 'url': reverse("books:list_book_unit_json", kwargs={'pk': pk}), 'datas': datas}
     return render(request, 'book_units/list_book_unit.html', context)
 
 
+@permission_required('books.view_bookunit')
 def list_book_unit_json(request, pk):
     book = None
     try:
@@ -189,6 +208,7 @@ def list_book_unit_json(request, pk):
     return HttpResponse(json.dumps(context), 'application/json', status=200)
 
 
+@permission_required('books.add_bookunit')
 def create_book_units(request, pk):
     context = {}
     form = BookUnitAddForm(request.POST or None)
@@ -210,6 +230,7 @@ def create_book_units(request, pk):
     return render(request, 'book_units/create.html', context)
 
 
+@permission_required('books.create_bookunit')
 def create_book_units_json(request, pk):
     context = {}
     form = BookUnitAddForm(request.POST or None)
@@ -234,6 +255,7 @@ def create_book_units_json(request, pk):
     return render(request, 'book_units/_form.html', context)
 
 
+@permission_required('books.delete_bookunit')
 def delete_book_units(request, pk):
     context = {}
     form = BookUnitDeleteForm(request.POST or None)
@@ -246,12 +268,14 @@ def delete_book_units(request, pk):
 
     if request.method == "POST":
         if form.is_valid():
+            if data.is_available:
+                data.remarks = form.cleaned_data.get('remark')
+                data.is_deleted = True
+                data.save()
 
-            data.remarks = form.cleaned_data.get('remark')
-            data.is_deleted = True
-            data.save()
-
-            messages.success(request, "Successfully deleted {}.".format(data.acc_no))
+                messages.success(request, "Successfully deleted {}.".format(data.acc_no))
+                return redirect('books:list_book_unit', pk=data.book.id)
+            messages.error(request, "Unable to delete data.")
             return redirect('books:list_book_unit', pk=data.book.id)
         else:
             messages.error(request, "Unable to delete data.")
@@ -261,3 +285,5 @@ def delete_book_units(request, pk):
     context['status'] = "Delete"
     context['page_name'] = "Book Units"
     return render(request, 'snippets/book_unit_delete.html', context)
+
+

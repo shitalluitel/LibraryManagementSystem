@@ -92,9 +92,9 @@ ENV/
 
 
 .idea/
-
+.vscode/
 /static/bower_components/
 /media/post_images/
 /.idea/
-
+/.vscode/
 *.md

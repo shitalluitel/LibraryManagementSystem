@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.models import Group
+from django.db import IntegrityError, transaction
 from django.forms import modelformset_factory
 from django.shortcuts import render, redirect, reverse
 
@@ -7,23 +10,8 @@ from students.forms import CreateChoiceForm, StudentCreateForm
 from students.models import Student
 
 
-#
-# def create_choice(request):
-#     context = {}
-#     form = CreateChoiceForm(request.POST or None)
-#
-#     if request.method == "POST":
-#         if form.is_valid():
-#             course = form.cleaned_data.get('course')
-#             batch = form.cleaned_data.get('batch')
-#             course_batch = CourseBatch.objects.get(course=course, batch=batch)
-#             print(course_batch)
-#             pass
-#
-#     context['form'] = form
-#     return render(request, 'students/select_course_batch.html', context)
-
-
+@login_required
+@permission_required('students.add_student', raise_exception=True)
 def create_student(request):
     context = {}
 
@@ -34,16 +22,24 @@ def create_student(request):
     # form = StudentCreateForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid() and student_formset.is_valid():
-            course = form.cleaned_data.get('course')
-            batch = form.cleaned_data.get('batch')
-            course_batch = CourseBatch.objects.get(course=course, batch=batch)
+            try:
+                with transaction.atomic():
+                    course = form.cleaned_data.get('course')
+                    batch = form.cleaned_data.get('batch')
+                    course_batch = CourseBatch.objects.get(course=course, batch=batch)
 
-            for student_form in student_formset.forms:
-                student = student_form.save(commit=False)
-                student.course_batch = course_batch
-                student.save()
+                    for student_form in student_formset.forms:
+                        student = student_form.save(commit=False)
+                        student.course_batch = course_batch
+                        student.save()
 
-            return redirect('students:create_student')
+                        user = student.user
+                        group = Group.objects.get(name__iexact='student')
+                        user.groups.add(group)
+                    return redirect('students:create_student')
+            except IntegrityError():
+                pass
+
         else:
             print("{}, {}".format(form.errors, student_formset.errors))
 
@@ -52,6 +48,8 @@ def create_student(request):
     return render(request, 'students/create.html', context)
 
 
+@login_required
+@permission_required('students.view_student', raise_exception=True)
 def list_student(request):
     context = {}
     form = CreateChoiceForm(request.POST or None)
@@ -60,6 +58,8 @@ def list_student(request):
     return render(request, 'students/list_student.html', context)
 
 
+@login_required
+@permission_required('students.view_student', raise_exception=True)
 def json_list_student(request):
     data = request.POST
     print(data.get('course'))

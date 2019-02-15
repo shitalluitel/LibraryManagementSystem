@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block page_name %}
+    Group
+{% endblock %}
+
+{% block page_description %}
+    Create New Group
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'groups:list_group' %}" class="breadcrumb-item">Groups</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+                            <label class="control-label" for="exampleInputEmail1">{{ form.name.label }}</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <span id="helpBlock2" class="help-block">{{ form.name.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group {% if form.permission.errors %} has-error {% endif %}">
+                            <label class="control-label" for="exampleInputEmail1">{{ form.permission.label }}</label>
+                            {{ form.permission }}
+                            {% if form.code.errors %}
+                                <span id="helpBlock2" class="help-block">{{ form.permission.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

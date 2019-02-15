@@ -42,11 +42,19 @@ class Student(models.Model):
         verbose_name_plural = 'Students'
         verbose_name = "Student"
         ordering = ['-roll_no']
+        permissions = (
+            ('view_student', "Can view student"),
+        )
+        app_label = 'students'
 
     def save(self, *args, **kwargs):
         self.roll_no = self.course_batch.course.code + "-" + self.course_batch.batch.code + "-" + str(
             self.course_batch.students.count() + 1)
-        user = User(email=self.roll_no + '@student.com', username=self.roll_no, password='student123', is_active=True)
+        user = User(email=self.roll_no + '@student.com', username=self.roll_no.lower().replace('-', '_'),
+                    password='student123', is_active=True, first_name=self.name.split(' ')[0] or None,
+                    last_name=self.name.split(' ')[-1] or None)
+
         user.save()
+
         self.user = user
         super().save(*args, **kwargs)
