@@ -1,0 +1,176 @@
+{% if perms.students.add_student or perms.students.view_student %}
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-user"></i>
+            <span>Student</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            {% if perms.students.add_student %}
+                <li><a href="{% url 'students:create_student' %}"><i class="fa fa-circle-o"></i> Create</a></li>
+            {% endif %}
+            {% if perms.students.view_student %}
+                <li><a href="{% url 'students:list_student' %}"><i class="fa fa-circle-o"></i>View</a></li>
+            {% endif %}
+        </ul>
+    </li>
+{% endif %}
+
+{% if perms.books.view_books %}
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Book</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{% url 'books:book_list' %}"><i class="fa fa-circle-o"></i> List</a></li>
+            {% if perms.books.delete_book %}
+                <li><a href="{% url 'books:book_trash' %}"><i class="fa fa-circle-o"></i> Trash</a></li>
+            {% endif %}
+        </ul>
+    </li>
+{% endif %}
+
+
+{% if perms.settings.add_course %}
+    <li class="treeview menu-open">
+        <a href="#">
+            <i class="fa fa-cogs"></i>
+            <span>Setting</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+
+            {% if perms.settings.add_course or perms.settings.view_course %}
+                <li class="treeview">
+                    <a href="#"><i class="fa fa-circle-o"></i>Course
+                        <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        {% if perms.settings.add_course %}
+                            <li><a href="{% url 'courses:create' %}"><i class="fa fa-circle-o"></i>Add Course</a></li>
+                        {% endif %}
+                        {% if perms.settings.view_course %}
+                            <li><a href="{% url 'courses:list' %}"><i class="fa fa-circle-o"></i>View Course</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if perms.settings.add_batch or perms.settings.view_batch %}
+                <li class="treeview">
+                    <a href="#"><i class="fa fa-circle-o"></i>Batch
+                        <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'batches:create' %}"><i class="fa fa-circle-o"></i>Add Batch</a></li>
+                        <li><a href="{% url 'batches:list' %}"><i class="fa fa-circle-o"></i>View Batch</a></li>
+
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if perms.settings.add_settings %}
+                <li class="treeview menu-open">
+                    <a href="{% url 'settings:setting' %}">
+                        <i class="fa fa-circle-o"></i>
+                        <span>Other Settings</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+
+    </li>
+{% endif %}
+
+{% if request.user.is_superuser %}
+    <li class="treeview menu-open">
+        <a href="#">
+            <i class="fa fa-users"></i>
+            <span>Groups and User</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+
+            <li class="treeview">
+                <a href="#"><i class="fa fa-circle-o"></i>Groups
+                    <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{% url 'groups:create_group' %}"><i class="fa fa-circle-o"></i>Add Group</a></li>
+                    <li><a href="{% url 'groups:list_group' %}"><i class="fa fa-circle-o"></i>View Group</a></li>
+                </ul>
+            </li>
+
+            <li class="treeview">
+                <a href="#"><i class="fa fa-circle-o"></i>User
+                    <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="#"><i class="fa fa-circle-o"></i>Add Batch</a></li>
+                    {#                <li><a href="{% url 'batches:list' %}"><i class="fa fa-circle-o"></i>View Batch</a></li>#}
+                </ul>
+            </li>
+        </ul>
+    </li>
+{% endif %}
+
+{% if perms.borrows.view_borrow %}
+    <li class="treeview menu-open">
+        <a href="{% url 'borrows:list_borrow' %}">
+            <i class="fa fa-bell"></i>
+            <span>Book Request</span>
+            <span class="pull-right-container">
+            <small class="label pull-right bg-yellow">10</small>
+        </span>
+        </a>
+    </li>
+
+{% endif %}
+
+{% if perms.books.assign_bookunit %}
+    <li class="treeview menu-open">
+        <a href="{% url 'borrows:assign_bookunit' %}">
+            <i class="fa fa-book"></i>
+            <span>Assign Book</span>
+        </a>
+    </li>
+{% endif %}
+
+{% if perms.borrows.view_borrow %}
+    <li class="treeview menu-open">
+        <a href="{% url 'borrows:list_approved_borrow' %}">
+            <i class="fa fa-book"></i>
+            <span>Return Book</span>
+        </a>
+    </li>
+{% endif %}
+
+
+{% if perms.fines.change_fine %}
+    <li class="treeview menu-open">
+        <a href="{% url 'fines:get_student_fine' %}">
+            <i class="fa fa-money"></i>
+            <span>Pay Fine</span>
+        </a>
+    </li>
+{% endif %}
+
+

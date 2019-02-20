@@ -54,8 +54,18 @@ def list_student(request):
     context = {}
     form = CreateChoiceForm(request.POST or None)
     context['form'] = form
+    if request.method == 'POST':
+        if form.is_valid():
+            data = form.cleaned_data
+            course = data.get('course')
+            batch = data.get('batch')
+            print(type(course))
+            print(type(batch))
+            student = Student.objects.filter(course_batch__batch=batch, course_batch__course_id=course)
+            context['datas'] = student
+            return render(request, 'students/list_student.html', context)
 
-    return render(request, 'students/list_student.html', context)
+    return render(request, 'students/select_course_batch.html', context)
 
 
 @login_required
@@ -65,3 +75,9 @@ def json_list_student(request):
     print(data.get('course'))
     print(data.get('batch'))
     pass
+
+# @login_required
+# @permission_required('students.view_student', raise_exception=True)
+# def detail_student(request, pk):
+#     try:
+#         data = Student.objects.get()

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load calculate_fine %}
 
 {% block page_name %}
     Book Request
@@ -28,7 +29,13 @@
                         <tr>
                             <th>Student</th>
                             <th>Book</th>
-                            <th style="width: 15%">Action</th>
+                            {% if approved %}
+                                <th>Issued Date</th>
+                                <th>Fine</th>
+                            {% endif %}
+                            {% if perms.books.assign_bookunit %}
+                                <th style="width: 15%">Action</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -38,13 +45,25 @@
                                 <td>
                                     {{ data.book_unit }}
                                 </td>
+
+                                {% if approved %}
+                                    <th>{{ data.issued_date }}</th>
+                                    <th>{{ data.issued_date|calculate_fine }}</th>
+                                {% endif %}
                                 {% if perms.books.assign_bookunit %}
-                                    <td class="text-center">
-                                        <a class="btn btn-primary btn-sm"
-                                           href="{% url 'borrows:assign_bookunit' data.id %}">Assign</a>
-                                        <a class="btn btn-warning btn-sm"
-                                           href="{% url 'borrows:cancel_request' data.id %}">Cancel</a>
-                                    </td>
+                                    {% if approved %}
+                                        <td class="text-center">
+                                            <a class="btn btn-primary btn-sm"
+                                               href="{% url 'borrows:return_borrow_book' data.id %}">Return</a>
+                                        </td>
+                                    {% else %}
+                                        <td class="text-center">
+                                            <a class="btn btn-primary btn-sm"
+                                               href="{% url 'borrows:assign_bookunit' data.id %}">Assign</a>
+                                            <a class="btn btn-warning btn-sm"
+                                               href="{% url 'borrows:cancel_request' data.id %}">Cancel</a>
+                                        </td>
+                                    {% endif %}
                                 {% endif %}
                             </tr>
 

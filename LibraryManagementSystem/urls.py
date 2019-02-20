@@ -20,11 +20,13 @@ from books.views import list_book
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', list_book, name="home"),
-    url(r'^books/', (include('books.urls'))),
     url(r'^batches/', include('settings.urls.batches')),
-    url(r'^groups/', include('settings.urls.groups')),
+    url(r'^books/', (include('books.urls'))),
+    url(r'^borrows/', include('borrows.urls')),
     url(r'^courses/', include('settings.urls.courses')),
+    url(r'^fines/', include('fines.urls')),
+    url(r'^groups/', include('settings.urls.groups')),
+    url(r'^settings/', include('settings.urls.settings')),
     url(r'^students/', include('students.urls')),
     url(r'^users/', include('users.urls')),
-    url(r'^borrows/', include('borrows.urls')),
 ]

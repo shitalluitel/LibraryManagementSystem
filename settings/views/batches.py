@@ -149,5 +149,5 @@ def create_course_batch(request, pk):
 
 def get_batch_list(request, pk):
     batch = Batch.objects.filter(course__id=pk)
-    empty_label = "Batch"
+    empty_label = "Select Batch"
     return render(request, 'snippets/option.html', {'datas': batch, 'empty_label': empty_label})

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load calculate_fine %}
+
+{% block page_name %}
+    Book Request
+{% endblock %}
+
+{% block page_description %}
+    List
+{% endblock %}
+
+{% block breadcrumbLink %}
+    {#    <li>#}
+    {#        <a href="#" class="breadcrumb-item">Books</a>#}
+    {##}
+    {#    </li>#}
+{% endblock %}
+
+{% block body_content %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3">
+                            <table id="books-unit-list" class="table table-striped table-bordered" style="width:100%">
+                                <tbody>
+                                <tr>
+                                    <td>Student Name</td>
+                                    <td>{{ data.student }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Book</td>
+                                    <td>{{ data.book_unit }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Issued Date</td>
+                                    <td>{{ data.get_issued_date }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Returned Date</td>
+                                    <td>
+                                        {% if data.return_date %}
+                                            {{ data.return_date }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Total Fine
+                                    </td>
+                                    <td>
+                                        {{ data.issued_date|calculate_fine }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="col-md-6 col-md-offset-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="col-md-6">
+                                    <input class="btn btn-block btn-danger" type="submit" value="Return">
+                                </div>
+                                <div class="col-md-6">
+                                    <a class="btn btn-block btn-primary" href="{{ next }}">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_stylesheets %}
+
+{% endblock %}
+
+{% block extra_script %}
+
+{% endblock %}

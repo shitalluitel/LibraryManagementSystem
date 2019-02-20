@@ -21,7 +21,7 @@ def home(request):
     return render(request, 'page.html')
 
 
-@permission_required('books.add_book')
+@permission_required('books.add_book', raise_exception=True)
 def create_book(request):
     context = {}
     form = BookForm(request.POST or None)
@@ -41,7 +41,7 @@ def create_book(request):
     return render(request, 'books/create.html', context)
 
 
-@permission_required('books.add_book')
+@permission_required('books.add_book', raise_exception=True)
 def create_json(request):
     context = {}
     form = BookForm(request.POST or None)
@@ -65,14 +65,14 @@ def create_json(request):
     return render(request, 'books/_form.html', context)
 
 
-@permission_required('books.view_books')
+@permission_required('books.view_books', login_url='users:login_user')
 def list_book(request):
     datas = Book.objects.filter(is_deleted=False)
     url = reverse("books:json_list_book")
     return render(request, 'books/list_book.html', {'url': url, 'status': True, 'datas': datas})
 
 
-@permission_required('books.view_books')
+@permission_required('books.view_books', raise_exception=True)
 def json_response(request, datas):
     totalRecords = datas.count()
     q_string = request.GET.get('sSearch')
@@ -103,25 +103,25 @@ def json_response(request, datas):
     return HttpResponse(json_datas, content_type='application/json', status=200)
 
 
-@permission_required('books.view_books')
+@permission_required('books.view_books', raise_exception=True)
 def json_list(request):
     datas = Book.objects.filter(is_deleted=False)
     return json_response(request=request, datas=datas)
 
 
-@permission_required('books.delete_book')
+@permission_required('books.delete_book', raise_exception=True)
 def book_trash(request):
     url = reverse("books:json_trash_book")
     return render(request, 'books/list_book.html', {'url': url, 'status': False})
 
 
-@permission_required('books.delete_book')
+@permission_required('books.delete_book', raise_exception=True)
 def json_trash(request):
     datas = Book.objects.filter(is_deleted=True)
     return json_response(request=request, datas=datas)
 
 
-@permission_required('books.change_book')
+@permission_required('books.change_book', raise_exception=True)
 def edit_book(request, pk):
     context = {}
     try:
@@ -141,7 +141,7 @@ def edit_book(request, pk):
     return render(request, 'books/create.html', context)
 
 
-@permission_required('books.delete_book')
+@permission_required('books.delete_book', raise_exception=True)
 def delete_book(request, pk):
     context = {}
     if request.method == "POST":
@@ -165,7 +165,7 @@ def delete_book(request, pk):
     return render(request, 'snippets/delete.html', context)
 
 
-@permission_required('books.undo_book')
+@permission_required('books.undo_book', raise_exception=True)
 def undo_book(request, pk):
     context = {}
     if request.method == "POST":
@@ -186,14 +186,21 @@ def undo_book(request, pk):
     return render(request, 'snippets/delete.html', context)
 
 
-@permission_required('books.view_bookunit')
+@permission_required('books.view_bookunit', raise_exception=True)
 def list_book_unit(request, pk):
     datas = BookUnit.objects.filter(is_deleted=False)
-    context = {'pk': pk, 'url': reverse("books:list_book_unit_json", kwargs={'pk': pk}), 'datas': datas}
+
+    context = {
+        'pk': pk,
+        'url': reverse("books:list_book_unit_json", kwargs={'pk': pk}),
+        'datas': datas,
+        'create_url': reverse("books:create_book_units", kwargs={'pk': pk})
+    }
+
     return render(request, 'book_units/list_book_unit.html', context)
 
 
-@permission_required('books.view_bookunit')
+@permission_required('books.view_bookunit', raise_exception=True)
 def list_book_unit_json(request, pk):
     book = None
     try:
@@ -208,7 +215,7 @@ def list_book_unit_json(request, pk):
     return HttpResponse(json.dumps(context), 'application/json', status=200)
 
 
-@permission_required('books.add_bookunit')
+@permission_required('books.add_bookunit', raise_exception=True)
 def create_book_units(request, pk):
     context = {}
     form = BookUnitAddForm(request.POST or None)
@@ -230,7 +237,7 @@ def create_book_units(request, pk):
     return render(request, 'book_units/create.html', context)
 
 
-@permission_required('books.create_bookunit')
+@permission_required('books.create_bookunit', raise_exception=True)
 def create_book_units_json(request, pk):
     context = {}
     form = BookUnitAddForm(request.POST or None)
@@ -255,7 +262,7 @@ def create_book_units_json(request, pk):
     return render(request, 'book_units/_form.html', context)
 
 
-@permission_required('books.delete_bookunit')
+@permission_required('books.delete_bookunit', raise_exception=True)
 def delete_book_units(request, pk):
     context = {}
     form = BookUnitDeleteForm(request.POST or None)
@@ -287,3 +294,10 @@ def delete_book_units(request, pk):
     return render(request, 'snippets/book_unit_delete.html', context)
 
 
+@permission_required('books.view_bookunit', raise_exception=True)
+def get_bookunit_option(request, pk):
+    book_unit = BookUnit.objects.filter(book__id=pk, status='available')
+    context = {}
+    context['datas'] = book_unit
+    context['empty_label'] = 'Book Unit'
+    return render(request, 'snippets/book_option.html', context)

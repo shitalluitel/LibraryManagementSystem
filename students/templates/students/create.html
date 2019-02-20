@@ -49,7 +49,6 @@
                                     <th class="text-center">Date of Birth</th>
                                     <th class="text-center">Phone No.</th>
                                     <th class="text-center">Address</th>
-                                    <th class="text-center">Photo</th>
                                     <th class="text-center"></th>
                                 </tr>
                                 </thead>
@@ -60,7 +59,6 @@
                                         <td>{{ student.dob }}</td>
                                         <td>{{ student.phone_no }}</td>
                                         <td>{{ student.address }}</td>
-                                        <td>{{ student.photo | add_class:'form-control formset-field' }}</td>
                                         <td>
                                             <button type="button" class="btn btn-danger btn-sm remove-form-row"
                                                     id="{{ formset.prefix }}">

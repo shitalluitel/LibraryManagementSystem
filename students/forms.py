@@ -36,12 +36,15 @@ class CreateChoiceForm(forms.Form):
         # elif self.instance.pk:
         #     self.fields['batch'].queryset = self.instance.course.batch_set.order_by('name')
 
+    def clean(self, *args, **kwargs):
+        super().clean(*args, **kwargs)
+
 
 class StudentCreateForm(forms.ModelForm):
     class Meta:
         model = Student
 
-        fields = ['name', 'dob', 'phone_no', 'address', 'photo']
+        fields = ['name', 'dob', 'phone_no', 'address']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control formset-field'}),

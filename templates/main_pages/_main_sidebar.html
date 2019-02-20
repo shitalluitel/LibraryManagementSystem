@@ -4,11 +4,13 @@
 {% block user_panel %}{% endblock %}
 
 {% block nav_links %}
-    {% if request.user|has_group:"staff" %}
-        {% include 'sidebar/_staff_sidebar.html' %}
-    {% elif request.user|has_group:'student' %}
-        {% include 'sidebar/_student_sidebar.html' %}
-    {% elif request.user.is_superuser %}
-        {% include 'sidebar/_admin_sidebar.html' %}
-    {% endif %}
+{#    {% if request.user|has_group:"staff" %}#}
+{#        {% include 'sidebar/_staff_sidebar.html' %}#}
+{#    {% elif request.user|has_group:'student' %}#}
+{#        {% include 'sidebar/_student_sidebar.html' %}#}
+{#    {% elif request.user.is_superuser %}#}
+{#        {% include 'sidebar/_admin_sidebar.html' %}#}
+{#    {% endif %}#}
+
+    {% include 'sidebar/_main_sidebar.html' %}
 {% endblock nav_links %}

@@ -7,7 +7,7 @@ from settings.forms.groups import GroupsCreate
 
 
 @login_required
-@permission_required('settings.add_group')
+@permission_required('groups.add_group', raise_exception=True)
 def create_group(request):
     context = {}
     form = GroupsCreate(request.POST or None)
@@ -26,7 +26,7 @@ def create_group(request):
 
 
 @login_required
-@permission_required('settings.add_group')
+@permission_required('groups.add_group', raise_exception=True)
 def list_group(request):
     context = {}
 
@@ -40,7 +40,7 @@ def list_group(request):
 
 
 @login_required
-@permission_required('settings.change_group')
+@permission_required('groups.change_group', raise_exception=True)
 def edit_group(request, pk):
     context = {}
     try:

@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
 
 {% block page_name %}
-    Batch
+    Student
 {% endblock %}
 
 {% block page_description %}
-    Create New Batch
+    Create
 {% endblock %}
 
 {% block breadcrumbLink %}
     <li>
-        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+        <a href="{% url 'students:list_student' %}" class="breadcrumb-item">Student</a>
 
     </li>
     <li>
@@ -21,19 +24,39 @@
 
 {% block body_content %}
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12 ">
             <div class="panel">
                 <div class="panel-body">
+
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.as_p }}
-
-                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading text-center">
+                                        <p style="font-size: 18px; font-weight: bold;">Student List</p>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            {{ form.course }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form.batch }}
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" value="Submit" id='submit-btn'
+                                                   class="btn btn-primary btn-block">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
 
 {% block extra_script %}

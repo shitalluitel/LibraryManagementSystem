@@ -12,7 +12,6 @@
 {% block breadcrumbLink %}
     <li>
         <a href="{% url 'books:book_list' %}" class="breadcrumb-item">Books</a>
-
     </li>
 {% endblock %}
 
@@ -21,7 +20,7 @@
     {% if perms.books.add_bookunit %}
         <div class="pull-right">
             {#        <a href="{% url 'books:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
-            <a href="#" class="btn add-book-unit btn-sm btn-primary"
+            <a href="{{ create_url }}" class="btn add-book-unit btn-sm btn-primary"
                style="margin-bottom: 10px;">Add New</a>
         </div>
 
@@ -54,17 +53,36 @@
                                             bg-yellow
                                         {% endif %}">{{ data.status }}</span>
                                 </td>
-                                {% if perms.books.delete_bookunit %}
-                                    <td class="text-center">
-                                        <a class="btn btn-danger btn-sm"
-                                           href="{% url 'books:delete_book_units' data.id %}">Delete</a>
-                                    </td>
-                                {% elif perms.books.order_bookunit %}
-                                    <td class="text-center">
+                                <td>
+
+
+                                    {% if perms.books.order_bookunit %}
+
                                         <a class="btn btn-success {% if not data.is_available %} disabled {% endif %} btn-sm"
                                            href="{% url 'borrows:order_bookunit' data.id %}">Order</a>
-                                    </td>
-                                {% endif %}
+
+                                    {% elif perms.books.assign_bookunit %}
+                                        {% if data.is_available %}
+
+                                            <a class="btn btn-primary btn-sm"
+                                               href="{% url 'borrows:get_student' %}?book={{ data.acc_no }}">Assign
+                                                Book</a>
+
+                                        {% elif data.is_booked %}
+
+                                            <a class="btn btn-primary btn-sm"
+                                               href="{% url 'borrows:return_book' data.id %}">Free Book</a>
+
+
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if perms.books.delete_bookunit and data.is_available %}
+
+                                        <a class="btn btn-danger btn-sm"
+                                           href="{% url 'books:delete_book_units' data.id %}">Delete</a>
+
+                                    {% endif %}
+                                </td>
                             </tr>
 
                         {% endfor %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Book
+{% endblock %}
+
+{% block page_description %}
+    Assign
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'books:book_list' %}" class="breadcrumb-item">Books</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Assign</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="col-md-6 col-md-offset-3">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <p style="font-weight: bold; font-size: 18px;">Student Detail</p>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group {% if student_form.student.errors %} has-error {% endif %}">
+                                            <label class="control-label">{{ student_form.student.label }}</label>
+                                            {{ student_form.student }}
+                                            {% if student_form.student.errors %}
+                                                <span class="help-block">
+                                                    {{ student_form.student.errors }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-block btn-primary">
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'js/assign_bookunit.js' %}"></script>
+{% endblock %}

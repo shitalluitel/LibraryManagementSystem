@@ -6,7 +6,7 @@ from model_utils import Choices
 from students.models import Student
 from users.models import User
 
-STATUS = Choices('pending', 'approved', 'cancelled')
+STATUS = Choices('pending', 'approved', 'cancelled', 'returned')
 
 
 # Create your models here.
@@ -16,14 +16,14 @@ class Borrow(models.Model):
     book_unit = models.ForeignKey(BookUnit, related_name="borrows", on_delete=models.DO_NOTHING)
     issued_date = models.DateField(null=True)
     return_date = models.DateField(null=True)
-    fine = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    # fine = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     status = models.CharField(max_length=32, choices=STATUS, default=STATUS.pending)
 
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.book_unit
+        return str(self.book_unit)
 
     class Meta:
         db_table = "borrows"
@@ -43,3 +43,9 @@ class Borrow(models.Model):
 
     def is_cancelled(self):
         return self.status == STATUS.cancelled
+
+    def is_returned(self):
+        return self.status == STATUS.returned
+
+    def get_issued_date(self):
+        return str(self.issued_date)

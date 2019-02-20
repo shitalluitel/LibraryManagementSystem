@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Book
+{% endblock %}
+
+{% block page_description %}
+    Assign
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'books:book_list' %}" class="breadcrumb-item">Books</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Assign</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <p style="font-weight: bold; font-size: 18px;">Student Detail</p>
+                                    </div>
+                                    <div class="panel-body">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                            <tr>
+                                                <th>Name:</th>
+                                                <td>{{ student.name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Roll no.:</th>
+                                                <td>{{ student.roll_no }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Course & Batch:</th>
+                                                <td>{{ student.course_batch.course.name }}, {{ student.course_batch.batch.name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Address:</th>
+                                                <td>{{ student.address }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Phone:</th>
+                                                <td>{{ student.phone_no }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <p style="font-weight: bold; font-size: 18px;">Fee Detail</p>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group {% if fine_form.amount.errors %} has-error {% endif %}">
+                                            <label class="control-label">{{ fine_form.amount.label }}</label>
+                                            {{ fine_form.amount }}
+                                            {% if fine_form.amount.errors %}
+                                                <span class="help-block">
+                                                    {{ fine_form.amount.errors }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group {% if fine_form.pay_amount.errors %} has-error {% endif %}">
+                                            <label class="control-label">{{ fine_form.pay_amount.label }}</label>
+                                            {{ fine_form.pay_amount }}
+                                            {% if fine_form.pay_amount.errors %}
+                                                <span class="help-block">
+                                                    {{ fine_form.pay_amount.errors }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-block btn-primary">
+                                        Pay
+                                    </button>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'js/assign_bookunit.js' %}"></script>
+{% endblock %}

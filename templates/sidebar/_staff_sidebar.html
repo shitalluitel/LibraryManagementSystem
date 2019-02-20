@@ -8,7 +8,7 @@
     </a>
     <ul class="treeview-menu">
         <li><a href="{% url 'students:create_student' %}"><i class="fa fa-circle-o"></i> Create</a></li>
-        <li><a href="{% url 'students:list_student' %}"><i class="fa fa-circle-o"></i> Icons</a></li>
+        <li><a href="{% url 'students:list_student' %}"><i class="fa fa-circle-o"></i>View</a></li>
     </ul>
 </li>
 <li class="treeview">
@@ -72,5 +72,26 @@
         <span class="pull-right-container">
             <small class="label pull-right bg-yellow">10</small>
         </span>
+    </a>
+</li>
+
+<li class="treeview menu-open">
+    <a href="{% url 'borrows:assign_bookunit' %}">
+        <i class="fa fa-book"></i>
+        <span>Assign Book</span>
+    </a>
+</li>
+
+<li class="treeview menu-open">
+    <a href="{% url 'borrows:list_approved_borrow' %}">
+        <i class="fa fa-book"></i>
+        <span>Return Book</span>
+    </a>
+</li>
+
+<li class="treeview menu-open">
+    <a href="{% url 'fines:get_student_fine' %}">
+        <i class="fa fa-money"></i>
+        <span>Pay Fine</span>
     </a>
 </li>

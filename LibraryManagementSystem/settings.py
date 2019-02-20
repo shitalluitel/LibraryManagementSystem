@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'books',
     'borrows',
     'django_adminlte',
-    # 'guardian',
+    'fines',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'LibraryManagementSystem.middleware.RequestMiddleware',
+    'settings.middleware.SettingCustomeMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryManagementSystem.urls'
@@ -169,7 +170,3 @@ AUTHENTICATION_BACKENDS = (
 )
 
 BASE_URL = env('BASE_URL')
-# ROLEPERMISSIONS_MODULE = 'LibraryManagementSystem.roles'
-
-# ROLEPERMISSIONS_REDIRECT_TO_LOGIN = True
-# ROLEPERMISSIONS_REGISTER_ADMIN = True

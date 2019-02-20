@@ -42,6 +42,7 @@ class Book(models.Model):
         permissions = (
             ('view_books', "Can view books"),
             ('undo_book', "Can undo books"),
+            ('view_trash', 'Can view trash list of books')
         )
 
     def __str__(self):

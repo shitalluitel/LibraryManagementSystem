@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Book
+{% endblock %}
+
+{% block page_description %}
+    Assign
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'books:book_list' %}" class="breadcrumb-item">Books</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Assign</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                <div class="form-group">
+                                    {{ form }}
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-block btn-primary">
+                                        Search
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <hr class="my-4">
+
+                    <div class="insert-table">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+{#    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">#}
+{% endblock %}
+
+{% block extra_script %}
+{#    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>#}
+{#    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>#}
+{#    <script>#}
+{#        $('body').on('submit', 'form', function () {#}
+{#            return false;#}
+{#        });#}
+{#        $('body').on('click', '#student-select', function () {#}
+{#            var roll_no = $('#id_roll_no').val();#}
+{#            var roll_no_regx = /[a-zA-Z]-[0-9]{3}-[0-9]/;#}
+{##}
+{#            if (roll_no_regx.test(roll_no)) {#}
+{#                $.ajax({#}
+{#                    url: "{% url 'borrows:get_student_detail' 'temp_url' %}".replace('temp_url', roll_no),#}
+{#                    cache: false,#}
+{#                    error: function () {#}
+{#                        console.log("error");#}
+{#                    },#}
+{#                    success: function (data) {#}
+{#                        $('.insert-table').empty().append(data);#}
+{#                        $('#book-table').DataTable({#}
+{#                            "paging": true,#}
+{#                            "ordering": true,#}
+{#                            "info": false,#}
+{#                            "searchable": false,#}
+{#                        });#}
+{#                    },#}
+{#                    type: 'GET'#}
+{#                });#}
+{#            } else {#}
+{#                alert('Incorrect format of Roll Number. It must be in format of [a-zA-z]-[0-9]{3}-[0-9].')#}
+{##}
+{#            }#}
+{##}
+{#        })#}
+{#        ;#}
+{#    </script>#}
+
+{% endblock %}
