@@ -66,7 +66,7 @@ class SelectStudentForm(forms.Form):
 class AssignBookForm(forms.Form):
     book_category = forms.ModelChoiceField(
         label="Book",
-        queryset=Book.objects.all(),
+        queryset=Book.objects.filter(is_deleted=False),
         widget=forms.Select(attrs={'class': 'form-control select2'}),
     )
 

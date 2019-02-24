@@ -18,6 +18,7 @@ class Borrow(models.Model):
     return_date = models.DateField(null=True)
     # fine = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     status = models.CharField(max_length=32, choices=STATUS, default=STATUS.pending)
+    notified = models.BooleanField(default=False)
 
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
