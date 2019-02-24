@@ -69,6 +69,7 @@ class Book(models.Model):
 class BookUnit(models.Model):
     book = models.ForeignKey(Book, related_name="book_units", on_delete=models.DO_NOTHING)
     acc_no = models.CharField(max_length=16)
+    book_code = models.CharField(max_length=16)
     status = models.CharField(max_length=64, choices=BOOK_STATUS, default=BOOK_STATUS.available)
 
     is_deleted = models.BooleanField(default=False)
@@ -109,4 +110,7 @@ def auto_add_acc_no(sender, instance, **kwargs):
     Creating acc_no
     """
     if not instance.acc_no:
-        instance.acc_no = instance.book.code + '-' + str(BookUnit.objects.count() + 1)
+        instance.acc_no = str(BookUnit.objects.count() + 1)
+
+    if not instance.book_code:
+        instance.book_code = instance.book.code + '-' + str(BookUnit.objects.filter(book=instance.book).count() + 1)

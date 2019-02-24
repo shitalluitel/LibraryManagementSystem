@@ -1,0 +1,23 @@
+{
+  "name": "LibraryManagementSystem",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Shital Babu Luitel"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "select2": "^4.0"
+  }
+}

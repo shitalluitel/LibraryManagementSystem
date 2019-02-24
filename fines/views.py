@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from borrows.models import Borrow
 from fines.forms import FineStudentForm, FineForm
 from fines.models import Fine
 from students.models import Student
@@ -57,3 +60,28 @@ def pay_fine(request, roll_no):
         return redirect('fines:get_student_fine')
 
     return render(request, 'fines/pay_fine.html', context)
+
+
+@login_required
+# @permission_required('fines.view_fine')
+def list_fine(request):
+    context = {}
+    borrows = Borrow.objects.filter(status='approved')
+    total_fine = 0
+
+    for data in borrows:
+        issued_date = data.issued_date
+        today = datetime.now().date()
+
+        fine_days = (today - issued_date).days - request.renew_days
+
+        fine_amount = 0
+
+        if fine_days > 0:
+            fine_amount = fine_days * request.fine_amount
+
+        total_fine = total_fine + fine_amount
+
+    context['borrows'] = borrows
+    context['total_fine'] = total_fine
+    return render(request, 'fines/list_fine.html', context)

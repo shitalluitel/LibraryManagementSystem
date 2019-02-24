@@ -1,3 +1,5 @@
+{% load has_group %}
+
 {% if perms.students.add_student or perms.students.view_student %}
     <li class="treeview">
         <a href="#">
@@ -174,3 +176,18 @@
 {% endif %}
 
 
+{% if request.user|has_group:'student' %}
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-folder"></i>
+            <span>Borrow</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{% url 'borrows:view_borrow_hisory' %}?status=approved"><i class="fa fa-circle-o"></i>Recent</a></li>
+            <li><a href="{% url 'borrows:view_borrow_hisory' %}"><i class="fa fa-circle-o"></i>History</a></li>
+        </ul>
+    </li>
+{% endif %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+{% load calculate_fine %}
+
+{% block page_name %}
+    Book
+{% endblock %}
+
+{% block page_description %}
+    Assign
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'books:book_list' %}" class="breadcrumb-item">Books</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Assign</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <table id="books-unit-list" class="table table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Book</th>
+
+                            <th>Issued Date</th>
+                            <th>Fine</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for data in borrows %}
+                            {% with fine=data.issued_date|calculate_fine %}
+                                {% if fine > 0 %}
+                                    <tr>
+                                        <td>{{ data.student.name }}</td>
+                                        <td>
+                                            {{ data.book_unit }}
+                                        </td>
+                                        <td>{{ data.issued_date }}</td>
+                                        <td>{{ data.issued_date|calculate_fine }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
+                        </tbody>
+                        <tr>
+                            <td colspan="3" class="text-right text-bold">Total Fine:</td>
+                            <td>Rs. {{ total_fine }}</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>
+    {#    <script src="{% static 'js/datatable_custom.js' %}"></script>#}
+    <script>
+        $(document).ready(function () {
+            var table = $('#books-unit-list').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searchable": true,
+                "language": {
+                    "emptyTable": "No any fine."
+                },
+            });
+        });
+
+
+    </script>
+{% endblock %}

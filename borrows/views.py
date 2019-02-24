@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, login_required
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render, redirect, reverse
@@ -59,7 +59,7 @@ def list_approved_borrow(request):
 
 @transaction.atomic
 @permission_required('books.assign_bookunit', raise_exception=True)
-def assign_bookunit(request, pk):
+def assign_borrow_bookunit(request, pk):
     try:
         data = Borrow.objects.get(id=pk)
     except Borrow.DoesNotExist:
@@ -119,11 +119,11 @@ def return_borrow_book(request, pk):
         issued_date = data.issued_date
         today = datetime.now().date()
 
-        fine_days = (today - issued_date).days
+        fine_days = (today - issued_date).days - request.renew_days
 
         fine_amount = 0
 
-        if fine_days > request.renew_days:
+        if fine_days > 0:
             fine_amount = fine_days * request.fine_amount
 
         data.return_date = today
@@ -165,10 +165,10 @@ def return_bookunit(request, pk):
         issued_date = data.issued_date
         today = datetime.now().date()
 
-        fine_days = (today - issued_date).days
+        fine_days = (today - issued_date).days - request.renew_days
         fine_amount = 0
 
-        if fine_days > request.renew_days:
+        if fine_days > 0:
             fine_amount = fine_days * request.fine_amount
 
         fine, created = Fine.objects.get_or_create(student=data.student)
@@ -198,13 +198,12 @@ def select_student(request):
 def get_student(request):
     context = {}
     form = SelectStudentForm(request.POST or None)
-    context['form'] = form
     book = request.GET.get('book')
 
     if request.method == 'POST':
         if book:
-            if form.is_valid:
-                roll_no = form.data.get('roll_no')
+            if form.is_valid():
+                roll_no = form.cleaned_data.get('student')
                 try:
                     data = Student.objects.get(roll_no__iexact=roll_no)
                 except Student.DoesNotExist:
@@ -223,12 +222,14 @@ def get_student(request):
                     context['data'] = data
                     context['borrow_details'] = borrows
                     context['total_fine'] = total_fine
-
+                    context['form'] = form
                     return render(request, 'borrows/view_detail_student.html', context)
                 messages.warning(request, 'Book threshold reached.')
         else:
             messages.warning(request, "Please select book first.")
             return redirect('books:book_list')
+
+    context['form'] = form
     return render(request, 'borrows/view_student.html', context)
 
 
@@ -260,7 +261,6 @@ def assign_book_to_student(request):
         borrow.book_unit = book_data
         borrow.user = request.user
         borrow.issued_date = datetime.now()
-        borrow.return_date = datetime.now()
         borrow.status = 'approved'
         borrow.save()
         messages.success(request, '{} assigned to {}.'.format(book_data, student))
@@ -313,3 +313,23 @@ def assign_bookunit(request):
 
     context['form'] = form
     return render(request, 'borrows/assign_bookunit.html', context)
+
+
+# @permission_required('borrows.view_history')
+@login_required
+def view_borrow_history(request):
+    context = {}
+    student = request.user.student
+    status = request.GET.get('status')
+
+    history = None
+    if status == 'approved':
+        history = Borrow.objects.filter(student=student, status='approved')
+        context['history'] = False
+    elif not status:
+        history = Borrow.objects.filter(student=student, status='returned')
+        context['history'] = True
+
+    context['datas'] = history
+    context['remaining_fine'] = Fine.objects.filter(student=student).first()
+    return render(request, 'borrows/history.html', context)

@@ -19,9 +19,9 @@ from books.views import list_book
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', list_book, name="home"),
+    url(r'^', include('pages.urls')),
     url(r'^batches/', include('settings.urls.batches')),
-    url(r'^books/', (include('books.urls'))),
+    url(r'^books/', include('books.urls')),
     url(r'^borrows/', include('borrows.urls')),
     url(r'^courses/', include('settings.urls.courses')),
     url(r'^fines/', include('fines.urls')),

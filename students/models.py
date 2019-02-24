@@ -27,7 +27,7 @@ class Student(models.Model):
     dob = models.DateField()
     phone_no = models.CharField(max_length=15, validators=[phone_no_validation])
     address = models.CharField(max_length=128)
-    user = models.ForeignKey(User, related_name="students", on_delete=models.DO_NOTHING)
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     course_batch = models.ForeignKey(CourseBatch, related_name='students', on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=12, choices=STATUS, default='Active')
     photo = models.ImageField(upload_to=get_document_filename, default=None, null=True, blank=True)

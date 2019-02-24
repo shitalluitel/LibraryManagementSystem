@@ -147,11 +147,14 @@ def delete_book(request, pk):
     if request.method == "POST":
         try:
             data = Book.objects.get(pk=pk)
-            if data.book_units.count() == 0:
-                data.delete()
-            else:
+            book_units = data.book_units.count()
+            if book_units == 0:
                 data.is_deleted = True
                 data.save()
+            else:
+                messages.error(request,
+                               'Unable to delete book. There are {} no. of book units associated with this book.'.format(
+                                   book_units))
         except Book.DoesNotExist:
             messages.error(request, "Unable to find data that you have requested.")
             return redirect('books:book_list')
@@ -188,12 +191,17 @@ def undo_book(request, pk):
 
 @permission_required('books.view_bookunit', raise_exception=True)
 def list_book_unit(request, pk):
-    datas = BookUnit.objects.filter(is_deleted=False)
+    try:
+        data = Book.objects.get(is_deleted=False, pk=pk)
+    except Book.DoesNotExist:
+        messages.error(request, 'Unable to find book.')
+        return redirect('books:book_list')
+    bookunits = data.book_units.filter(is_deleted=False)
 
     context = {
         'pk': pk,
         'url': reverse("books:list_book_unit_json", kwargs={'pk': pk}),
-        'datas': datas,
+        'datas': bookunits,
         'create_url': reverse("books:create_book_units", kwargs={'pk': pk})
     }
 

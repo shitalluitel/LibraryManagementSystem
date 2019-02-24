@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'borrows',
     'django_adminlte',
     'fines',
+    'pages',
 ]
 
 MIDDLEWARE = [

@@ -57,45 +57,9 @@
 {% endblock %}
 
 {% block extra_stylesheets %}
-{#    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">#}
+    {#    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">#}
 {% endblock %}
 
 {% block extra_script %}
-{#    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>#}
-{#    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>#}
-{#    <script>#}
-{#        $('body').on('submit', 'form', function () {#}
-{#            return false;#}
-{#        });#}
-{#        $('body').on('click', '#student-select', function () {#}
-{#            var roll_no = $('#id_roll_no').val();#}
-{#            var roll_no_regx = /[a-zA-Z]-[0-9]{3}-[0-9]/;#}
-{##}
-{#            if (roll_no_regx.test(roll_no)) {#}
-{#                $.ajax({#}
-{#                    url: "{% url 'borrows:get_student_detail' 'temp_url' %}".replace('temp_url', roll_no),#}
-{#                    cache: false,#}
-{#                    error: function () {#}
-{#                        console.log("error");#}
-{#                    },#}
-{#                    success: function (data) {#}
-{#                        $('.insert-table').empty().append(data);#}
-{#                        $('#book-table').DataTable({#}
-{#                            "paging": true,#}
-{#                            "ordering": true,#}
-{#                            "info": false,#}
-{#                            "searchable": false,#}
-{#                        });#}
-{#                    },#}
-{#                    type: 'GET'#}
-{#                });#}
-{#            } else {#}
-{#                alert('Incorrect format of Roll Number. It must be in format of [a-zA-z]-[0-9]{3}-[0-9].')#}
-{##}
-{#            }#}
-{##}
-{#        })#}
-{#        ;#}
-{#    </script>#}
-
+    <script src="{% static 'js/assign_bookunit.js' %}"></script>
 {% endblock %}

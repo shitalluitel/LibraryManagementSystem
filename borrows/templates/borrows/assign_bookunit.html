@@ -65,6 +65,26 @@
                                         <p style="font-weight: bold; font-size: 18px;">Student Detail</p>
                                     </div>
                                     <div class="panel-body">
+                                        <div class="form-group {% if form.course.errors %} has-error {% endif %}">
+                                            <label class="control-label">{{ form.course.label }}</label>
+                                            {{ form.course }}
+                                            {% if form.course.errors %}
+                                                <span class="help-block">
+                                                    {{ form.course.errors }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group {% if form.batch.errors %} has-error {% endif %}">
+                                            <label class="control-label">{{ form.batch.label }}</label>
+                                            {{ form.batch }}
+                                            {% if form.batch.errors %}
+                                                <span class="help-block">
+                                                    {{ form.batch.errors }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
                                         <div class="form-group {% if form.student.errors %} has-error {% endif %}">
                                             <label class="control-label">{{ form.student.label }}</label>
                                             {{ form.student }}

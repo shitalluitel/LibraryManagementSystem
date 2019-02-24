@@ -76,8 +76,22 @@ def json_list_student(request):
     print(data.get('batch'))
     pass
 
+
 # @login_required
 # @permission_required('students.view_student', raise_exception=True)
 # def detail_student(request, pk):
 #     try:
 #         data = Student.objects.get()
+
+
+@login_required
+@permission_required('students.view_student')
+def get_student_option(request):
+    context = {}
+    batch = request.GET.get('batch')
+    course = request.GET.get('course')
+
+    student = Student.objects.filter(course_batch__course_id=course, course_batch__batch_id=batch).order_by('name')
+    context['students'] = student
+    context['empty_label'] = 'Select Student'
+    return render(request, 'snippets/student_option.html', context)

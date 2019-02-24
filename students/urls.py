@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^create/$', views.create_student, name="create_student"),
     url(r'^$', views.list_student, name="list_student"),
     # url(r'^create/$', views.create_student, name="create_student"),
+    url(r'^get-student-option/$', views.get_student_option, name="get_student_option"),
 ]

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load calculate_fine %}
+
+{% block page_name %}
+    Borrow
+{% endblock %}
+
+{% block page_description %}
+    {% if history %} History {% else %} Recent{% endif %}
+{% endblock %}
+
+{% block breadcrumbLink %}
+    {#    <li>#}
+    {#        <a href="#" class="breadcrumb-item">Books</a>#}
+    {##}
+    {#    </li>#}
+{% endblock %}
+
+{% block body_content %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-body">
+                    <table id="books-unit-list" class="table  table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th style="width: 5%;">S.N.</th>
+                            <th>Book</th>
+                            <th>Book Code</th>
+                            <th>Acc. No.</th>
+                            <th>Issued Date</th>
+                            <th>Return Date</th>
+                            <th>Fine</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for data in datas %}
+                            <tr>
+                                <td></td>
+                                <td>{{ data.book_unit.book.name }}</td>
+                                <td>
+                                    {{ data.book_unit.book_code }}
+                                </td>
+                                <td>
+                                    {{ data.book_unit.acc_no }}
+                                </td>
+
+                                <td>{{ data.issued_date }}</td>
+                                <td>{{ data.return_date }}</td>
+                                <th class="fine-amount">{{ data.issued_date|calculate_fine }}</th>
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+                        <tr>
+                            <th class="text-right" colspan="6">Total Fine:</th>
+                            <td class="total-fine-amount"></td>
+                        </tr>
+
+                        <tr>
+                            <th class="text-right" colspan="6">Remaining Fine:</th>
+                            <td class="remaining-fine">Rs. {{ remaining_fine }}</td>
+                        </tr>
+
+                        {% if not history %}
+                            <tr>
+                                <th class="text-right" colspan="6">Grand Total Fine:</th>
+                                <th class="grand-total"></th>
+                            </tr>
+                        {% endif %}
+
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_stylesheets %}
+    {#    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/jquery.dataTables.min.css' %}">#}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>
+    {#    <script src="{% static 'js/datatable_custom.js' %}"></script>#}
+    <script>
+        $(document).ready(function () {
+            var t = $('#books-unit-list').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searchable": true,
+            });
+
+            t.on('order.dt search.dt', function () {
+                t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        });
+
+
+        $(document).ready(function () {
+            var total_fine = 0;
+            var fine = 0;
+            $('.fine-amount').each(function () {
+                fine = $(this).text();
+                total_fine = total_fine + parseInt(fine);
+                $('.total-fine-amount').text('Rs. ' + total_fine);
+            });
+
+            if ('{{ history }}' == 'False') {
+                var remaining_fine = parseFloat($('.remaining-fine').text().split(' ')[1]);
+                var grand_total = 0;
+                grand_total = total_fine + remaining_fine;
+                $('.grand-total').text('Rs. ' + grand_total);
+            }
+        });
+
+
+    </script>
+{% endblock %}
