@@ -3,8 +3,13 @@ from decimal import Decimal
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-
 # Create your views here.
+from books.models import BookUnit
+from borrows.models import Borrow
+from fines.models import Fine
+from django.db.models import Sum
+
+
 @login_required
 def home_page(request):
     try:
@@ -18,9 +23,8 @@ def home_page(request):
     elif group_name.lower() == 'admin':
         # return redirect('student_dashboard')
         pass
-    else:
-
-        pass
+    elif group_name.lower() == 'staff':
+        return staff_dashboard(request=request)
 
 
 def student_dashboard(request):
@@ -53,3 +57,19 @@ def student_dashboard(request):
     context['borrowed_history'] = borrow_history
 
     return render(request, 'pages/_student_dashboard.html', context)
+
+
+def staff_dashboard(request):
+    user = request.user
+    context = {}
+    ordered_book_list = Borrow.objects.filter(status='ordered')
+    ordered_books = ordered_book_list.count()
+    no_of_books = BookUnit.objects.count()
+
+    total_fine = Fine.objects.aggregate(Sum('amount'))['amount__sum']
+
+    context['no_of_books'] = no_of_books
+    context['ordered_books'] = ordered_books
+    context['total_fine'] = total_fine
+    context['borrowed_books'] = ordered_book_list
+    return render(request, 'pages/_staff_dashboard.html', context)

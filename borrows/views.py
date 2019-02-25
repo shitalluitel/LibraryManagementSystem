@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render, redirect, reverse
 from datetime import datetime
 # Create your views here.
@@ -333,3 +333,16 @@ def view_borrow_history(request):
     context['datas'] = history
     context['remaining_fine'] = Fine.objects.filter(student=student).first()
     return render(request, 'borrows/history.html', context)
+
+
+@login_required
+def display_pie_chart(request):
+    fieldname = 'book_unit__book__name'
+    borrows = Borrow.objects.filter(Q(status='returned') | Q(status='approved')).values(fieldname).order_by(
+        fieldname).annotate(
+        count=Count(fieldname))
+    labels = []
+    data = []
+    for borrow in borrows:
+        labels.append(borrow.get('count'))
+        data.append(borrow.get('book_unit__book__name'))

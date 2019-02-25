@@ -11,7 +11,7 @@ class Setting(models.Model):
     books_allowed = models.PositiveIntegerField(default=3)
     timestamp = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
-    user = models.ForeignKey(User, related_name='settings', on_delete=models.DO_NOTHING, null=True, blank=True)
+    # user = models.ForeignKey(User, related_name='settings', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     class Meta:
         db_table = "settings"
