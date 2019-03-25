@@ -30,23 +30,24 @@
             <div class="box">
 
                 <div class="box-body">
-                    <table id="books-unit-list" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th style="width: 5%">S.N.</th>
-                            <th style="width: 20%">Acc No.</th>
-                            <th style="width: 25%">Book Code</th>
-                            <th style="width: 30%">Status</th>
-                            <th style="width: 20%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for data in datas %}
+                    <div class="table-responsive">
+                        <table id="books-unit-list" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
                             <tr>
-                                <td></td>
-                                <td>{{ data.acc_no }}</td>
-                                <td>{{ data.book_code }}</td>
-                                <td>
+                                <th style="width: 5%">S.N.</th>
+                                <th style="width: 20%">Acc No.</th>
+                                <th style="width: 25%">Book Code</th>
+                                <th style="width: 30%">Status</th>
+                                <th style="width: 20%">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in datas %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ data.acc_no }}</td>
+                                    <td>{{ data.book_code }}</td>
+                                    <td>
                                     <span style="padding: 5px; border-radius:10px; " class="{% if data.is_available %}
                                             bg-green-active
                                         {% elif data.is_booked %}
@@ -56,42 +57,43 @@
                                         {% elif data.is_pending %}
                                             bg-yellow
                                         {% endif %}">{{ data.status }}</span>
-                                </td>
-                                <td>
+                                    </td>
+                                    <td>
 
 
-                                    {% if perms.books.order_bookunit and not perms.books.assign_bookunit %}
+                                        {% if perms.books.order_bookunit and not perms.books.assign_bookunit %}
 
-                                        <a class="btn btn-success {% if not data.is_available %} disabled {% endif %} btn-sm"
-                                           href="{% url 'borrows:order_bookunit' data.id %}">Order</a>
+                                            <a class="btn btn-success {% if not data.is_available %} disabled {% endif %} btn-sm"
+                                               href="{% url 'borrows:order_bookunit' data.id %}">Order</a>
 
-                                    {% elif perms.books.assign_bookunit %}
-                                        {% if data.is_available %}
-                                            <a class="btn btn-success btn-sm"
-                                               href="{% url 'borrows:get_student' %}?book={{ data.acc_no }}">Assign
-                                                Book</a>
+                                        {% elif perms.books.assign_bookunit %}
+                                            {% if data.is_available %}
+                                                <a class="btn btn-success btn-sm"
+                                                   href="{% url 'borrows:get_student' %}?book={{ data.acc_no }}">Assign
+                                                    Book</a>
 
-                                        {% elif data.is_booked %}
+                                            {% elif data.is_booked %}
 
-                                            <a class="btn btn-primary btn-sm"
-                                               href="{% url 'borrows:return_book' data.id %}">Free Book</a>
+                                                <a class="btn btn-primary btn-sm"
+                                                   href="{% url 'borrows:return_book' data.id %}">Free Book</a>
 
+
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if perms.books.delete_bookunit and data.is_available %}
+
+                                            <a class="btn btn-danger btn-sm"
+                                               href="{% url 'books:delete_book_units' data.id %}">Delete</a>
 
                                         {% endif %}
-                                    {% endif %}
-                                    {% if perms.books.delete_bookunit and data.is_available %}
+                                    </td>
+                                </tr>
 
-                                        <a class="btn btn-danger btn-sm"
-                                           href="{% url 'books:delete_book_units' data.id %}">Delete</a>
+                            {% endfor %}
 
-                                    {% endif %}
-                                </td>
-                            </tr>
-
-                        {% endfor %}
-
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <!-- /.box-body -->
             </div>

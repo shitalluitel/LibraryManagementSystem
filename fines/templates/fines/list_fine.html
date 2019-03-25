@@ -28,38 +28,40 @@
         <div class="col-md-12 ">
             <div class="panel">
                 <div class="panel-body">
-                    <table id="books-unit-list" class="table table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Book</th>
+                    <div class="table-responsive">
+                        <table id="books-unit-list" class="table table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Book</th>
 
-                            <th>Issued Date</th>
-                            <th>Fine</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for data in borrows %}
-                            {% with fine=data.issued_date|calculate_fine %}
-                                {% if fine > 0 %}
-                                    <tr>
-                                        <td>{{ data.student.name }}</td>
-                                        <td>
-                                            {{ data.book_unit }}
-                                        </td>
-                                        <td>{{ data.issued_date }}</td>
-                                        <td>{{ data.issued_date|calculate_fine }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endwith %}
-                        {% endfor %}
-                        </tbody>
-                        <tr>
-                            <td colspan="3" class="text-right text-bold">Total Fine:</td>
-                            <td>Rs. {{ total_fine }}</td>
-                        </tr>
+                                <th>Issued Date</th>
+                                <th>Fine</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in borrows %}
+                                {% with fine=data.id|calculate_fine %}
+                                    {% if fine > 0 %}
+                                        <tr>
+                                            <td>{{ data.student.name }}</td>
+                                            <td>
+                                                {{ data.book_unit }}
+                                            </td>
+                                            <td>{{ data.issued_date }}</td>
+                                            <td>{{ fine }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                            </tbody>
+                            <tr>
+                                <td colspan="3" class="text-right text-bold">Total Fine:</td>
+                                <td>Rs. {{ total_fine }}</td>
+                            </tr>
 
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

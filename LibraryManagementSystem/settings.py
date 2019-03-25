@@ -48,19 +48,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django_celery_beat',
     'django_celery_results',
-    'users',
+    'django_adminlte',
     'djangoformsetjs',
-    'students',
     'widget_tweaks',
+
+    'users',
+    'students',
     'settings',
     'books',
     'borrows',
-    'django_adminlte',
     'fines',
     'pages',
     'notifications',
+    'reports',
 ]
 
 MIDDLEWARE = [

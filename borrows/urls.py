@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^assign-book-to-student/$', views.assign_book_to_student, name="assign_book_to_student"),
     url(r'^assign-bookunit/$', views.assign_bookunit, name='assign_bookunit'),
     url(r'^history/$', views.view_borrow_history, name='view_borrow_hisory'),
+
 ]

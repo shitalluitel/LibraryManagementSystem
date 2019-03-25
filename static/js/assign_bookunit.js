@@ -49,3 +49,5 @@ $('body').on('change', '#id_batch', function () {
         $('#id_student').empty().append("<option value='' selected>Select Student</option>");
     }
 });
+
+

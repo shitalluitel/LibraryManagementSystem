@@ -3,19 +3,28 @@ from datetime import datetime
 from django import template
 from django.contrib.auth.models import Group
 
+from borrows.models import Borrow
 from settings.models import Setting
 
 register = template.Library()
 
 
 @register.filter(name='calculate_fine')
-def has_group(date):
+def has_group(id):
+    try:
+        data = Borrow.objects.get(id=id)
+    except Borrow.DoesNotExist:
+        return 0
+
+    issued_date = data.issued_date
+    return_date = data.return_date
+
     setting = Setting.objects.first()
     renew_days = setting.renew_days
     fine_amount = setting.fine_amount
 
-    today = datetime.now().date()
-    fine_days = (today - date).days - renew_days
+    today = return_date or datetime.now().date()
+    fine_days = (today - issued_date).days - renew_days
 
     total_fine = 0
 

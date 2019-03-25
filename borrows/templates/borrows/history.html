@@ -24,56 +24,58 @@
             <div class="box">
 
                 <div class="box-body">
-                    <table id="books-unit-list" class="table  table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th style="width: 5%;">S.N.</th>
-                            <th>Book</th>
-                            <th>Book Code</th>
-                            <th>Acc. No.</th>
-                            <th>Issued Date</th>
-                            <th>Return Date</th>
-                            <th>Fine</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for data in datas %}
+                    <div class="table-responsive">
+                        <table id="books-unit-list" class="table  table-bordered" style="width:100%">
+                            <thead>
                             <tr>
-                                <td></td>
-                                <td>{{ data.book_unit.book.name }}</td>
-                                <td>
-                                    {{ data.book_unit.book_code }}
-                                </td>
-                                <td>
-                                    {{ data.book_unit.acc_no }}
-                                </td>
+                                <th style="width: 5%;">S.N.</th>
+                                <th>Book</th>
+                                <th>Book Code</th>
+                                <th>Acc. No.</th>
+                                <th>Issued Date</th>
+                                <th>Return Date</th>
+                                <th>Fine</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in datas %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ data.book_unit.book.name }}</td>
+                                    <td>
+                                        {{ data.book_unit.book_code }}
+                                    </td>
+                                    <td>
+                                        {{ data.book_unit.acc_no }}
+                                    </td>
 
-                                <td>{{ data.issued_date }}</td>
-                                <td>{{ data.return_date }}</td>
-                                <th class="fine-amount">{{ data.issued_date|calculate_fine }}</th>
+                                    <td>{{ data.issued_date }}</td>
+                                    <td>{{ data.return_date }}</td>
+                                    <th class="fine-amount">{{ data.id|calculate_fine }}</th>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                            <tr>
+                                <th class="text-right" colspan="6">Total Fine:</th>
+                                <td class="total-fine-amount"></td>
                             </tr>
 
-                        {% endfor %}
-
-                        </tbody>
-                        <tr>
-                            <th class="text-right" colspan="6">Total Fine:</th>
-                            <td class="total-fine-amount"></td>
-                        </tr>
-
-                        <tr>
-                            <th class="text-right" colspan="6">Remaining Fine:</th>
-                            <td class="remaining-fine">Rs. {{ remaining_fine }}</td>
-                        </tr>
-
-                        {% if not history %}
                             <tr>
-                                <th class="text-right" colspan="6">Grand Total Fine:</th>
-                                <th class="grand-total"></th>
+                                <th class="text-right" colspan="6">Remaining Fine:</th>
+                                <td class="remaining-fine">Rs. {{ remaining_fine }}</td>
                             </tr>
-                        {% endif %}
 
-                    </table>
+                            {% if not history %}
+                                <tr>
+                                    <th class="text-right" colspan="6">Grand Total Fine:</th>
+                                    <th class="grand-total"></th>
+                                </tr>
+                            {% endif %}
+
+                        </table>
+                    </div>
                 </div>
                 <!-- /.box-body -->
             </div>

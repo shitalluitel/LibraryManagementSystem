@@ -8,12 +8,16 @@
 {% endblock %}
 
 {% block page_description %}
-    List
+    File Upload
 {% endblock %}
 
 {% block breadcrumbLink %}
     <li>
-        <a href="#" class="breadcrumb-item active">Students</a>
+        <a href="{% url 'students:list_student' %}" class="breadcrumb-item">Students</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
     </li>
 {% endblock %}
 
@@ -23,21 +27,24 @@
         <div class="col-md-12 ">
             <div class="panel">
                 <div class="panel-body">
-
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-4 col-md-offset-4">
                                 <div class="panel panel-default">
                                     <div class="panel-heading text-center">
-                                        <p style="font-size: 18px; font-weight: bold;">Student List</p>
+                                        <p style="font-size: 18px; font-weight: bold;">Choose File</p>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
-                                            {{ form.course }}
+                                            {{ choice_form.course }}
                                         </div>
                                         <div class="form-group">
-                                            {{ form.batch }}
+                                            {{ choice_form.batch }}
+                                        </div>
+
+                                        <div class="form-group">
+                                            {{ form.document }}
                                         </div>
                                         <div class="form-group">
                                             <input type="submit" value="Submit" id='submit-btn'
@@ -47,15 +54,16 @@
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block extra_script %}
+    <script src="{% static 'js/customFormset.js' %}"></script>
     <script>
         $('body').on('change', '#id_course', function () {
             var selected_value = $(this).children('option:selected').val();

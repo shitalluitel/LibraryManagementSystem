@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.models import Group
 from django.db import IntegrityError, transaction
@@ -5,12 +6,13 @@ from django.forms import modelformset_factory
 from django.shortcuts import render, redirect, reverse
 
 # Create your views here.
+from openpyxl import load_workbook
+
 from settings.models import CourseBatch
-from students.forms import CreateChoiceForm, StudentCreateForm
+from students.forms import CreateChoiceForm, StudentCreateForm, StudentFileForm
 from students.models import Student
 
 
-@login_required
 @permission_required('students.add_student', raise_exception=True)
 def create_student(request):
     context = {}
@@ -48,7 +50,6 @@ def create_student(request):
     return render(request, 'students/create.html', context)
 
 
-@login_required
 @permission_required('students.view_student', raise_exception=True)
 def list_student(request):
     context = {}
@@ -59,8 +60,6 @@ def list_student(request):
             data = form.cleaned_data
             course = data.get('course')
             batch = data.get('batch')
-            print(type(course))
-            print(type(batch))
             student = Student.objects.filter(course_batch__batch=batch, course_batch__course_id=course)
             context['datas'] = student
             return render(request, 'students/list_student.html', context)
@@ -68,7 +67,6 @@ def list_student(request):
     return render(request, 'students/select_course_batch.html', context)
 
 
-@login_required
 @permission_required('students.view_student', raise_exception=True)
 def json_list_student(request):
     data = request.POST
@@ -77,14 +75,13 @@ def json_list_student(request):
     pass
 
 
-# @login_required
+# 
 # @permission_required('students.view_student', raise_exception=True)
 # def detail_student(request, pk):
 #     try:
 #         data = Student.objects.get()
 
 
-@login_required
 @permission_required('students.view_student')
 def get_student_option(request):
     context = {}
@@ -95,3 +92,50 @@ def get_student_option(request):
     context['students'] = student
     context['empty_label'] = 'Select Student'
     return render(request, 'snippets/student_option.html', context)
+
+
+@permission_required('students.add_student')
+def add_student_from_file(request):
+    context = {}
+    choice_form = CreateChoiceForm(data=request.POST)
+    form = StudentFileForm(data=request.POST or None, files=request.FILES)
+    if request.method == 'POST':
+        if form.is_valid() and choice_form.is_valid():
+            file = request.FILES.get('document')
+            with transaction.atomic():
+                course = choice_form.cleaned_data.get('course')
+                batch = choice_form.cleaned_data.get('batch')
+                course_batch = CourseBatch.objects.get(course=course, batch=batch)
+
+                file = form.cleaned_data.get('document')
+
+                try:
+                    wb = load_workbook(file)
+                    sheet = wb['Sheet1']
+                    ws = wb.active
+                    rows = tuple(ws.rows)
+                    for i in range(2, len(rows) + 1):
+                        name = sheet.cell(i, 1).value
+                        dob = sheet.cell(i, 2).value
+                        phone = sheet.cell(i, 3).value
+                        address = sheet.cell(i, 4).value
+
+                        student = Student.objects.create(name=name, dob=dob, phone_no=phone, address=address,
+                                                         course_batch=course_batch)
+
+                        print("Name: {}, DOB: {}, Phone: {}, Address: {}".format(name, dob, phone, address))
+                    # Student.objects.bulk_create(create_list)
+                    messages.success(request, "Successfully created student from given file.")
+                except Exception as e:
+                    print(e)
+                    messages.error(request, e)
+
+    context['choice_form'] = choice_form
+    context['form'] = form
+
+    return render(request, 'students/student_upload_file.html', context)
+
+
+@permission_required('students.add_student')
+def student_home(request):
+    return render(request, 'students/student_home.html')

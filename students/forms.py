@@ -56,3 +56,7 @@ class StudentCreateForm(forms.ModelForm):
 
     class Media(object):
         js = formset_media_js + ()
+
+
+class StudentFileForm(forms.Form):
+    document = forms.FileField()

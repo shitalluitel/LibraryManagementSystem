@@ -4,16 +4,16 @@
 {% load formset_tags %}
 
 {% block page_name %}
-    Batch
+    Student
 {% endblock %}
 
 {% block page_description %}
-    Create New Batch
+    Create
 {% endblock %}
 
 {% block breadcrumbLink %}
     <li>
-        <a href="{% url 'batches:list' %}" class="breadcrumb-item">Batches</a>
+        <a href="{% url 'students:list_student' %}" class="breadcrumb-item">Students</a>
 
     </li>
     <li>

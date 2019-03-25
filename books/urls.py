@@ -20,4 +20,6 @@ urlpatterns = [
     url(r'^delete/book-units/(?P<pk>\d+)/$', views.delete_book_units, name="delete_book_units"),
     # url(r'^order/(?P<pk>\d+)$', views.order_bookunit, name="order_bookunit"),
     url(r'^get-bookunit-option/(?P<pk>\d+)/$', views.get_bookunit_option, name="get_bookunit_option"),
+    url(r'^file-upload/$', views.add_book_from_file, name="add_book_from_file"),
+    url(r'^home/$', views.book_home, name="book_home"),
 ]

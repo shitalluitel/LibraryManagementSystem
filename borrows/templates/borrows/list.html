@@ -24,53 +24,55 @@
             <div class="box">
 
                 <div class="box-body">
-                    <table id="books-unit-list" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Book</th>
-                            {% if approved %}
-                                <th>Issued Date</th>
-                                <th>Fine</th>
-                            {% endif %}
-                            {% if perms.books.assign_bookunit %}
-                                <th style="width: 15%">Action</th>
-                            {% endif %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for data in datas %}
+                    <div class="table-responsive">
+                        <table id="books-unit-list" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
                             <tr>
-                                <td>{{ data.student.name }}</td>
-                                <td>
-                                    {{ data.book_unit }}
-                                </td>
-
+                                <th>Student</th>
+                                <th>Book</th>
                                 {% if approved %}
-                                    <th>{{ data.issued_date }}</th>
-                                    <th>{{ data.issued_date|calculate_fine }}</th>
+                                    <th>Issued Date</th>
+                                    <th>Fine</th>
                                 {% endif %}
                                 {% if perms.books.assign_bookunit %}
-                                    {% if approved %}
-                                        <td class="text-center">
-                                            <a class="btn btn-primary btn-sm"
-                                               href="{% url 'borrows:return_borrow_book' data.id %}">Return</a>
-                                        </td>
-                                    {% else %}
-                                        <td class="text-center">
-                                            <a class="btn btn-primary btn-sm"
-                                               href="{% url 'borrows:assign_borrow_bookunit' data.id %}">Assign</a>
-                                            <a class="btn btn-warning btn-sm"
-                                               href="{% url 'borrows:cancel_request' data.id %}">Cancel</a>
-                                        </td>
-                                    {% endif %}
+                                    <th style="width: 15%">Action</th>
                                 {% endif %}
                             </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in datas %}
+                                <tr>
+                                    <td>{{ data.student.name }}</td>
+                                    <td>
+                                        {{ data.book_unit }}
+                                    </td>
 
-                        {% endfor %}
+                                    {% if approved %}
+                                        <th>{{ data.issued_date }}</th>
+                                        <th>{{ data.id|calculate_fine }}</th>
+                                    {% endif %}
+                                    {% if perms.books.assign_bookunit %}
+                                        {% if approved %}
+                                            <td class="text-center">
+                                                <a class="btn btn-primary btn-sm"
+                                                   href="{% url 'borrows:return_borrow_book' data.id %}">Return</a>
+                                            </td>
+                                        {% else %}
+                                            <td class="text-center">
+                                                <a class="btn btn-primary btn-sm"
+                                                   href="{% url 'borrows:assign_borrow_bookunit' data.id %}">Assign</a>
+                                                <a class="btn btn-warning btn-sm"
+                                                   href="{% url 'borrows:cancel_request' data.id %}">Cancel</a>
+                                            </td>
+                                        {% endif %}
+                                    {% endif %}
+                                </tr>
 
-                        </tbody>
-                    </table>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <!-- /.box-body -->
             </div>

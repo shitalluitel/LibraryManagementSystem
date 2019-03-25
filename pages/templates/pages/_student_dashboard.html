@@ -8,6 +8,7 @@
     Dashboard
 {% endblock %}
 
+
 {% block page_description %}
     Assign
 {% endblock %}
@@ -106,7 +107,7 @@
                                         {{ data.return_date }}
                                     </td>
                                     <td>
-                                        {{ data.issued_date|calculate_fine }}
+                                        {{ data.id|calculate_fine }}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -167,7 +168,7 @@
                                         {{ data.return_date }}
                                     </td>
                                     <td>
-                                        {{ data.issued_date|calculate_fine }}
+                                        {{ data.id|calculate_fine }}
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -2,7 +2,6 @@
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% load formset_tags %}
-{% load calculate_fine %}
 
 {% block page_name %}
     Dashboard
@@ -23,7 +22,7 @@
     <div class="row">
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="info-box">
-                <span class="info-box-icon bg-blue-active"><i class="fa fa-money"></i></span>
+                <span class="info-box-icon bg-blue-active"><i class="fa fa-book"></i></span>
 
                 <div class="info-box-content">
                     <span class="info-box-text">No. of Books</span>
@@ -37,7 +36,7 @@
 
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="info-box">
-                <span class="info-box-icon bg-red-active"><i class="fa fa-money"></i></span>
+                <span class="info-box-icon bg-red-active"><i class="fa fa-folder"></i></span>
 
                 <div class="info-box-content">
                     <span class="info-box-text">ORDERED BOOKS</span>
@@ -50,7 +49,7 @@
 
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="info-box">
-                <span class="info-box-icon bg-yellow-active"><i class="fa fa-folder"></i></span>
+                <span class="info-box-icon bg-yellow-active"><i class="fa fa-money"></i></span>
 
                 <div class="info-box-content">
                     <span class="info-box-text">FINE TO COLLECT</span>
@@ -83,30 +82,25 @@
                         <table class="table no-margin">
                             <thead>
                             <tr>
-                                <th>Book Code</th>
-                                <th>Acc. No.</th>
-                                <th>Issued Date</th>
-                                <th>Return Date</th>
-                                <th>Fine</th>
+                                <th>Student</th>
+                                <th>Book</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for data in borrowed_books %}
                                 <tr>
                                     <td>
+                                        {{ data.student }}
+                                    </td>
+                                    <td>
                                         {{ data.book_unit.book_code }}
                                     </td>
                                     <td>
-                                        {{ data.book_unit.acc_no }}
-                                    </td>
-                                    <td>
-                                        {{ data.issued_date }}
-                                    </td>
-                                    <td>
-                                        {{ data.return_date }}
-                                    </td>
-                                    <td>
-                                        {{ data.issued_date|calculate_fine }}
+                                        <a class="btn btn-primary btn-sm"
+                                           href="{% url 'borrows:assign_borrow_bookunit' data.id %}">Assign</a>
+                                        <a class="btn btn-warning btn-sm"
+                                           href="{% url 'borrows:cancel_request' data.id %}">Cancel</a>
                                     </td>
                                 </tr>
                             {% empty %}
@@ -131,6 +125,33 @@
             </div>
         </div>
 
+        <div class="col-md-6 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Top 10 Issued Books</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="chart-responsive">
+                                <canvas id="issued-books" width="450" height="250"></canvas>
+                            </div>
+                            <!-- ./chart-responsive -->
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -138,4 +159,7 @@
 {% endblock %}
 
 {% block extra_script %}
+    <script src="{% static 'bower_components/chart.js/dist/Chart.min.js' %}"></script>
+
+    <script src="{% static 'js/staff_dashboard.js' %}"></script>
 {% endblock %}

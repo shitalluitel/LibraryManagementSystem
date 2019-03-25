@@ -88,17 +88,21 @@
                                     <td>{{ borrow_data.book_unit }}</td>
                                     <td>{{ borrow_data.issued_date }}</td>
                                     <td>{{ borrow_data.return_date }}</td>
-                                    <td class="fine-amount">{{ borrow_data.issued_date | calculate_fine }}</td>
+                                    <td class="fine-amount">{{ borrow_data.id | calculate_fine }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
+                            <th class="text-right" colspan="3">Total Fine:</th>
+                            <td>Rs. <span class="total-fine-amount">{{ total_fine }}</span></td>
+                            </tr>
+
                             <tr>
-                                <th colspan="3" class="text-right"> Total Fine</th>
-                                <td class="total-fine-amount">{{ total_fine }}</td>
+                                <th class="text-right" colspan="3">Remaining Fine:</th>
+                                <td>Rs. <span class="remaining-fine">{{ remaining_fine }}</span></td>
                             </tr>
                             <tr>
-                                <th colspan="3" class="text-right"> Remaining Fine</th>
-                                <td>{{ total_fine }}</td>
+                                <th class="text-right" colspan="3">Grand Total:</th>
+                                <th class="grand-total"></th>
                             </tr>
                         </table>
                     </div>
@@ -138,11 +142,19 @@
         $(document).ready(function () {
             var total_fine = 0;
             var fine = 0;
+            var grand_total = 0;
+
             $('.fine-amount').each(function () {
                 fine = $(this).text();
                 total_fine = total_fine + parseInt(fine);
                 $('.total-fine-amount').text(total_fine);
             });
+
+
+            var remaining_fine = parseFloat($('.remaining-fine').text());
+            grand_total = total_fine + remaining_fine;
+            $('.grand-total').text('Rs. ' + grand_total);
+
         });
     </script>
 

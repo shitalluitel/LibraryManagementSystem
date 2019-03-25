@@ -20,10 +20,7 @@ def home_page(request):
 
     if group_name.lower() == 'student':
         return student_dashboard(request=request)
-    elif group_name.lower() == 'admin':
-        # return redirect('student_dashboard')
-        pass
-    elif group_name.lower() == 'staff':
+    elif group_name.lower() == 'staff' or group_name.lower() == 'admin':
         return staff_dashboard(request=request)
 
 
@@ -34,7 +31,7 @@ def student_dashboard(request):
     total_fine = 0
 
     remaining_fine = student.fine
-    borrowed_books = student.borrows.filter(status='approved')[:5]
+    borrowed_books = student.borrows.filter(status='approved')
     borrow_history = student.borrows.filter(status='returned')[:5]
 
     for data in borrowed_books:
@@ -52,7 +49,7 @@ def student_dashboard(request):
 
     context['remaining_fine'] = remaining_fine
     context['borrowed_books_count'] = borrowed_books.count()
-    context['borrowed_books'] = borrowed_books
+    context['borrowed_books'] = borrowed_books[:5]
     context['estimated_total_fine'] = total_fine
     context['borrowed_history'] = borrow_history
 
@@ -62,7 +59,7 @@ def student_dashboard(request):
 def staff_dashboard(request):
     user = request.user
     context = {}
-    ordered_book_list = Borrow.objects.filter(status='ordered')
+    ordered_book_list = Borrow.objects.filter(status='pending')
     ordered_books = ordered_book_list.count()
     no_of_books = BookUnit.objects.count()
 

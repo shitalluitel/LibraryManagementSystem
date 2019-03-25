@@ -9,11 +9,12 @@ from django.shortcuts import render, redirect, reverse
 
 # Create your views here.
 # from rolepermissions.decorators import has_permission_decorator
-
+from openpyxl import load_workbook
 
 from books.forms import BookForm, BookUnitAddForm, BookUnitDeleteForm
 from books.models import Book, BookUnit, BOOK_STATUS
 from borrows.models import Borrow
+from students.forms import StudentFileForm
 
 
 def home(request):
@@ -309,3 +310,47 @@ def get_bookunit_option(request, pk):
     context['datas'] = book_unit
     context['empty_label'] = 'Book Unit'
     return render(request, 'snippets/book_option.html', context)
+
+
+@permission_required('books.add_book')
+def add_book_from_file(request):
+    context = {}
+    form = StudentFileForm(data=request.POST or None, files=request.FILES)
+    if request.method == 'POST':
+        if form.is_valid():
+            file = request.FILES.get('document')
+            with transaction.atomic():
+                file = form.cleaned_data.get('document')
+
+                try:
+                    wb = load_workbook(file)
+                    sheet = wb['Sheet1']
+                    ws = wb.active
+                    rows = tuple(ws.rows)
+                    for i in range(2, len(rows) + 1):
+                        code = sheet.cell(i, 1).value
+                        name = sheet.cell(i, 2).value
+                        author = sheet.cell(i, 3).value
+                        publisher = sheet.cell(i, 4).value
+                        edition = sheet.cell(i, 5).value
+                        no_of_units = int(sheet.cell(i, 6).value)
+
+                        book = Book.objects.create(code=code, name=name, author=author, publisher=publisher,
+                                                   edition=edition)
+
+                        for i in range(0, no_of_units):
+                            BookUnit(book=book).save()
+
+                    messages.success(request, "Successfully created books from given file.")
+                except Exception as e:
+                    print(e)
+                    messages.error(request, e)
+
+    context['form'] = form
+
+    return render(request, 'books/create_books_from_file.html', context)
+
+
+@permission_required('books.add_book')
+def book_home(request):
+    return render(request, 'books/book_home.html')

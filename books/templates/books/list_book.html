@@ -23,6 +23,7 @@
         <div class="pull-right">
             {#        <a href="{% url 'books:create' %}" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>#}
             <a href="#" class="btn add-batch btn-sm btn-primary" style="margin-bottom: 10px;">Add New</a>
+            <a href="{% url 'books:book_home' %}" class="btn btn-sm btn-github" style="margin-bottom: 10px;">File Upload</a>
         </div>
     {% endif %}
 
@@ -31,62 +32,64 @@
             <div class="box">
 
                 <div class="box-body">
-                    <table id="books-list" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Edition</th>
-                            <th>Author</th>
-                            <th>Publisher</th>
-                            {% if perms.books.change_book or perms.book.delete_book %}
-                                <th></th>
-                            {% endif %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for data in datas %}
+                    <div class="table-responsive">
+                        <table id="books-list" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
                             <tr>
-                                <td>
-                                    <a class="book-unit"
-                                       href="{% url 'books:list_book_unit' data.id %}">{{ data.name }}</a>
-                                </td>
-                                <td>
-                                    {{ data.code }}
-                                </td>
-                                <td>
-                                    {{ data.edition }}
-                                </td>
-                                <td>
-                                    {{ data.author }}
-                                </td>
-                                <td>
-                                    {{ data.publisher }}
-                                </td>
-
-                                {% if perms.books.change_book or perms.books.delete_book %}
-                                    <td>
-                                        {% if status %}
-                                            {% if perms.books.change_book %}
-                                                <a class="btn btn-primary btn-sm"
-                                                   href="{% url 'books:edit_book' data.id %}">Edit</a>
-                                            {% elif perms.books.delete_book %}
-                                                <a class="btn btn-danger btn-sm"
-                                                   href="{% url 'books:delete_book' data.id %}">Delete</a>
-                                            {% endif %}
-                                        {% else %}
-                                            {% if perms.books.delete_book %}
-                                                <a class="btn btn-primary btn-sm"
-                                                   href="{% url 'books:undo_book' data.id %}">Undo</a>
-                                            {% endif %}
-                                        {% endif %}
-                                    </td>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Edition</th>
+                                <th>Author</th>
+                                <th>Publisher</th>
+                                {% if perms.books.change_book or perms.book.delete_book %}
+                                    <th></th>
                                 {% endif %}
-
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for data in datas %}
+                                <tr>
+                                    <td>
+                                        <a class="book-unit"
+                                           href="{% url 'books:list_book_unit' data.id %}">{{ data.name }}</a>
+                                    </td>
+                                    <td>
+                                        {{ data.code }}
+                                    </td>
+                                    <td>
+                                        {{ data.edition }}
+                                    </td>
+                                    <td>
+                                        {{ data.author }}
+                                    </td>
+                                    <td>
+                                        {{ data.publisher }}
+                                    </td>
+
+                                    {% if perms.books.change_book or perms.books.delete_book %}
+                                        <td>
+                                            {% if status %}
+                                                {% if perms.books.change_book %}
+                                                    <a class="btn btn-primary btn-sm"
+                                                       href="{% url 'books:edit_book' data.id %}">Edit</a>
+                                                {% elif perms.books.delete_book %}
+                                                    <a class="btn btn-danger btn-sm"
+                                                       href="{% url 'books:delete_book' data.id %}">Delete</a>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if perms.books.delete_book %}
+                                                    <a class="btn btn-primary btn-sm"
+                                                       href="{% url 'books:undo_book' data.id %}">Undo</a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <!-- /.box-body -->
             </div>

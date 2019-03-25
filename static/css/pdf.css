@@ -1,0 +1,211 @@
+@media all {
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        color: #000000;
+        padding: 0;
+        background: none;
+        margin: 0 auto;
+    }
+
+    *,
+    *:before,
+    *:after {
+        color: #000;
+        background: transparent;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    table {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 20px;
+        border-spacing: 0;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+
+    .container {
+        margin: 0 auto;
+        width: 100%;
+        position: relative;
+    }
+
+    .label {
+        border: 1px solid #000;
+    }
+
+    .table {
+        border-collapse: collapse !important;
+    }
+
+    .table > thead > tr > th,
+    .table > tbody > tr > th,
+    .table > tfoot > tr > th,
+    .table > thead > tr > td,
+    .table > tbody > tr > td,
+    .table > tfoot > tr > td {
+        padding: 3px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border: 1px solid #000000;
+    }
+
+    .text-muted {
+        color: #777;
+    }
+
+    .text-red {
+        color: #ff0000 !important;
+    }
+
+    .text-black {
+        color: #000000 ! important;
+    }
+
+    .text-green {
+        color: #008000 !important;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-middle {
+        vertical-align: middle !important;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .list-unstyled {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    hr {
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+        border: 0 !important;
+        border-top: 1px solid #eee !important;
+    }
+
+    .page-break {
+        page-break-after: always;
+        page-break-inside: avoid;
+        overflow: hidden;
+    }
+
+    .clearfix {
+        clear: both;
+    }
+
+    .pull-left {
+        float: left;
+    }
+
+    .pull-right {
+        float: right;
+    }
+
+    .hr {
+        border-top: 1px solid #000000;
+        width: 100%;
+        height: 1px;
+    }
+
+    .text-bold {
+        font-weight: bold !important;
+    }
+
+    .text-body {
+        text-align: justify;
+        text-justify: inter-word;
+        line-height: 2.1;
+    }
+
+    .text-footer {
+        margin-left: 550px;
+        margin-top: 100px;
+        line-height: 1.7;
+    }
+
+    .letter-table thead tr th {
+        vertical-align: middle;
+    }
+
+    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
+        border: 1px solid #8e8d8d ! important;
+    }
+
+    .applicant-table tbody tr td {
+        padding: 12px 0 12px 10px;
+    }
+
+    .footer {
+        /*position: absolute;*/
+        /*bottom:-100px;*/
+        /*right:0;*/
+        /*!* margin-left: 500px;*!*/
+        /*!*float: right;*!*/
+        display: block;
+        position: running(footer);
+    }
+}

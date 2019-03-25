@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Book
+{% endblock %}
+
+{% block page_description %}
+    Home
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="javascript:void(0)" class="breadcrumb-item">Book</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panels">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-aqua">
+                                <div class="inner">
+                                    <h3>Book</h3>
+                                    <h4>Form Create</h4>
+
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <a href="{% url 'books:book_create' %}" class="small-box-footer">More info <i
+                                        class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-yellow">
+                                <div class="inner">
+                                    <h3>Book</h3>
+
+                                    <h4>File Create</h4>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </div>
+                                <a href="{% url 'books:add_book_from_file' %}" class="small-box-footer">More info <i
+                                        class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+
+                        <!-- ./col -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'js/assign_bookunit.js' %}"></script>
+{% endblock %}

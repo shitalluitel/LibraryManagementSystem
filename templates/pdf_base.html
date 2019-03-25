@@ -1,0 +1,26 @@
+{% load staticfiles %}
+{% load get_settings from page_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta charset="UTF-8">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <base href="{% get_settings 'BASE_URL' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/dist/js/bootstrap.min.js' %}">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet"
+          href="{% static  'font-awesome/css/font-awesome.min.css' %}">
+
+    {% block stylesheet %}
+        <link rel="stylesheet" href="{% static 'css/pdf.css' %}"/>
+    {% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+{% block content %}
+{% endblock %}
+</body>
+</html>

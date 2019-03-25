@@ -11,7 +11,7 @@
         </a>
         <ul class="treeview-menu">
             {% if perms.students.add_student %}
-                <li><a href="{% url 'students:create_student' %}"><i class="fa fa-circle-o"></i> Create</a></li>
+                <li><a href="{% url 'students:student_home' %}"><i class="fa fa-circle-o"></i> Create</a></li>
             {% endif %}
             {% if perms.students.view_student %}
                 <li><a href="{% url 'students:list_student' %}"><i class="fa fa-circle-o"></i>View</a></li>
@@ -176,7 +176,7 @@
 {% endif %}
 
 
-{% if request.user|has_group:'student' %}
+{% if request.user|has_group:'student' or not request.user.is_superuser %}
     <li class="treeview">
         <a href="#">
             <i class="fa fa-folder"></i>
@@ -186,8 +186,18 @@
             </span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="{% url 'borrows:view_borrow_hisory' %}?status=approved"><i class="fa fa-circle-o"></i>Recent</a></li>
+            <li><a href="{% url 'borrows:view_borrow_hisory' %}?status=approved"><i
+                    class="fa fa-circle-o"></i>Recent</a></li>
             <li><a href="{% url 'borrows:view_borrow_hisory' %}"><i class="fa fa-circle-o"></i>History</a></li>
         </ul>
+    </li>
+{% endif %}
+
+{% if request.user.is_superuser %}
+    <li class="treeview menu-open">
+        <a href="{% url 'reports:home' %}">
+            <i class="fa fa-file-pdf-o"></i>
+            <span>Report</span>
+        </a>
     </li>
 {% endif %}

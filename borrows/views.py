@@ -1,7 +1,10 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
 from django.db import transaction
 from django.db.models import Q, Count
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from datetime import datetime
 # Create your views here.
@@ -15,25 +18,32 @@ from students.models import Student
 @transaction.atomic
 @permission_required('books.order_bookunit', raise_exception=True)
 def order_bookunit(request, pk):
-    try:
-        data = BookUnit.objects.get(id=pk)
-    except BookUnit.DoesNotExist:
-        messages.warning(request, 'Unable to order book.')
-        return redirect("books:list_book_unit", pk=data.book.id)
-    if data.is_available:
-        data.status = 'pending'
-        data.save()
+    student = request.user.student
+    borrow = student.borrows.filter(Q(status='approved') | Q(status='pending')).count()
 
-        borrow = Borrow()
-        student = request.user.students.first()
-        borrow.student = student
-        borrow.book_unit = data
-        borrow.status = 'pending'
-        borrow.save()
+    if borrow < request.books_allowed:
+        try:
+            data = BookUnit.objects.get(id=pk)
+        except BookUnit.DoesNotExist:
+            messages.warning(request, 'Unable to order book.')
+            return redirect("books:list_book_unit", pk=data.book.id)
 
-        return redirect("books:list_book_unit", pk=data.book.id)
+        if data.is_available:
+            data.status = 'pending'
+            data.save()
 
-    messages.error(request, 'This unit of book is unavailable. Please try again later.')
+            borrow = Borrow()
+            borrow.student = student
+            borrow.book_unit = data
+            borrow.status = 'pending'
+            borrow.save()
+
+            return redirect("books:list_book_unit", pk=data.book.id)
+
+        messages.error(request, 'This unit of book is unavailable. Please try again later.')
+    else:
+        messages.warning(request, 'Book unit threshold reached.')
+        return redirect('books:book_list')
     return redirect("books:list_book_unit", pk=data.book.id)
 
 
@@ -75,7 +85,7 @@ def assign_borrow_bookunit(request, pk):
     book.status = 'booked'
     book.save()
 
-    messages.success(request, 'Successfully assigned')
+    messages.success(request, 'Successfully approved book unit {} to {}.'.format(book.book_code, data.student))
     return redirect('borrows:list_borrow')
 
 
@@ -117,6 +127,7 @@ def return_borrow_book(request, pk):
         book.save()
 
         issued_date = data.issued_date
+        # return_date = data.return_date
         today = datetime.now().date()
 
         fine_days = (today - issued_date).days - request.renew_days
@@ -139,6 +150,7 @@ def return_borrow_book(request, pk):
 
         fine.save()
 
+        messages.success(request, 'Book Returned Successfully.')
         return redirect('borrows:list_approved_borrow')
 
     context['data'] = data
@@ -163,6 +175,7 @@ def return_bookunit(request, pk):
         book.save()
 
         issued_date = data.issued_date
+        # return_date = data.return_date
         today = datetime.now().date()
 
         fine_days = (today - issued_date).days - request.renew_days
@@ -183,6 +196,8 @@ def return_bookunit(request, pk):
         data.return_date = today
         data.status = 'returned'
         data.save()
+
+        messages.success(request, 'Book Returned Successfully.')
         return redirect('books:list_book_unit', pk=book.book_id)
 
     context['data'] = data
@@ -210,8 +225,8 @@ def get_student(request):
                     messages.error(request, 'Unable to find student.')
                     return redirect('borrows:get_student')
 
-                borrows = data.borrows.filter(Q(status='approved') | Q(status='returned'))
-                book_count = data.borrows.filter(status='approved').count()
+                borrows = data.borrows.filter(Q(status='approved'))
+                book_count = borrows.count()
 
                 if book_count < 3:
                     fine = Fine.objects.filter(student=data).first()
@@ -221,7 +236,7 @@ def get_student(request):
                         total_fine = 0
                     context['data'] = data
                     context['borrow_details'] = borrows
-                    context['total_fine'] = total_fine
+                    context['remaining_fine'] = total_fine
                     context['form'] = form
                     return render(request, 'borrows/view_detail_student.html', context)
                 messages.warning(request, 'Book threshold reached.')
@@ -340,9 +355,17 @@ def display_pie_chart(request):
     fieldname = 'book_unit__book__name'
     borrows = Borrow.objects.filter(Q(status='returned') | Q(status='approved')).values(fieldname).order_by(
         fieldname).annotate(
-        count=Count(fieldname))
+        count=Count(fieldname))[:10]
     labels = []
     data = []
+    return_data = {}
+    json_array = []
     for borrow in borrows:
-        labels.append(borrow.get('count'))
-        data.append(borrow.get('book_unit__book__name'))
+        labels.append(borrow.get('book_unit__book__name'))
+        data.append(borrow.get('count'))
+
+    return_data['data'] = data
+    return_data['labels'] = labels
+    # json_array.append(return_data)
+    json_data = json.dumps(return_data)
+    return HttpResponse(json_data, content_type='application/json')
