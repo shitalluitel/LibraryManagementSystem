@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Student
+{% endblock %}
+
+{% block page_description %}
+    Create
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="#" class="breadcrumb-item">Routine</a>
+    </li>
+
+    <li>
+        <a href="#" class="breadcrumb-item active">Edit</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>{{ form.course.label }}</label>
+                                    {{ form.course }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>{{ form.batches.label }}</label>
+                                    {{ form.batches }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>{{ form.semester.label }}</label>
+                                    {{ form.semester }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="table-responsive">
+                            <table class="table form-table table-bordered table-sm">
+                                <thead class="text-center">
+                                <tr>
+                                    <th class="text-center">Day</th>
+                                    <th class="text-center">Time From</th>
+                                    <th class="text-center">Time To</th>
+                                    <th class="text-center">Teacher</th>
+                                    <th class="text-center">Subject</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for routine in formset %}
+                                    <tr class="item">
+                                        <td>{{ routine.day }}</td>
+                                        <td>{{ routine.time_from }}</td>
+                                        <td>{{ routine.time_to }}</td>
+                                        <td>{{ routine.teacher }}</td>
+                                        <td>{{ routine.subject }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm remove-form-row"
+                                                    id="{{ formset.prefix }}">
+                                                {% if routine.id %}
+                                                    {{ routine.id | add_class:"formset-field" }} {% endif %}
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="9"
+                                        style="border-left: none!important; border-right: none !important; border-bottom: none!important;">
+                                        <button type="button" class="btn btn-sm btn-success add-form-row"
+                                                id="{{ formset.prefix }}">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            {{ formset.management_form }}
+                        </div>
+
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/wickedpicker/dist/wickedpicker.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'js/customFormset.js' %}"></script>
+    <script src="{% static 'bower_components/wickedpicker/dist/wickedpicker.min.js' %}"></script>
+    <script>
+        $('body').on('change', '#id_course', function () {
+            var selected_value = $(this).children('option:selected').val();
+            if (selected_value) {
+                $.ajax({
+                    url: '/batches/' + selected_value + "/batch-list/",
+                    cache: false,
+                    error: function () {
+                        console.log("error");
+                    },
+                    success: function (data) {
+                        $('#id_batch').empty().append(data);
+                    },
+                    type: 'GET'
+                });
+            } else {
+                $('#id_batches').html('<option value selected>Select Batch</option>').val('');
+            }
+        });
+
+
+        $(document).on('ready', function () {
+            var course = {{ course }};
+            var batch = {{ batch }};
+            var sem = '{{ sem }}';
+
+
+        });
+    </script>
+{% endblock %}

@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     'pages',
     'notifications',
     'reports',
+    'files',
+    'routines',
 ]
 
 MIDDLEWARE = [

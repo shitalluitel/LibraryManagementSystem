@@ -38,6 +38,40 @@
     </li>
 {% endif %}
 
+<li class="treeview">
+    <a href="#">
+        <i class="fa fa-file-pdf-o"></i>
+        <span>Notice</span>
+        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+    </a>
+    <ul class="treeview-menu">
+        {% if perms.file.add_file %}
+            <li><a href="{% url 'files:file_upload' %}"><i class="fa fa-circle-o"></i> Create</a></li>
+        {% endif %}
+        <li><a href="{% url 'files:file_home' %}"><i class="fa fa-circle-o"></i> Home</a></li>
+
+    </ul>
+</li>
+
+<li class="treeview">
+    <a href="#">
+        <i class="fa fa-calendar"></i>
+        <span>Routine</span>
+        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+    </a>
+    <ul class="treeview-menu">
+        {% if perms.routines.add_routine %}
+            <li><a href="{% url 'routines:create' %}"><i class="fa fa-circle-o"></i> Create</a></li>
+        {% endif %}
+        <li><a href="{% url 'routines:list' %}"><i class="fa fa-circle-o"></i> List</a></li>
+
+    </ul>
+</li>
+
 
 {% if perms.settings.add_course %}
     <li class="treeview menu-open">

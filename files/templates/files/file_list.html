@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+{% load calculate_fine %}
+
+{% block page_name %}
+    {{ type }}
+{% endblock %}
+
+{% block page_description %}
+    List
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'files:file_home' %}" class="breadcrumb-item">File</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">{{ type }}</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="books-unit-list" class="table table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>S.N.</th>
+                                <th>Title</th>
+                                <th>Document</th>
+                                <th>Created Date</th>
+                                {% if perms.files.delete_file %}
+                                    <th>Action</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in datas %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ data.title }}</td>
+                                    <td>
+                                        <a href="{{ data.document.url }}" target="_blank">{{ data.document }}</a>
+                                    </td>
+                                    <td>{{ data.timestamp }}</td>
+                                    {% if perms.files.delete_file %}
+                                        <td>
+                                            <a href="{% url 'files:file_delete' data.id %}?next={% url 'files:file_list' %}?type={{ type }}"
+                                               class="btn btn-danger">Delete</a>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            var t = $('#books-unit-list').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searchable": true,
+                "language": {
+                    "emptyTable": "No any fine."
+                },
+            });
+
+            t.on('order.dt search.dt', function () {
+                t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        });
+
+
+    </script>
+{% endblock %}

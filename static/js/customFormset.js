@@ -58,7 +58,7 @@ function deleteForm(btn, prefix) {
         var goto_id = $(btn).find('input').val();
         if (goto_id) {
             $.ajax({
-                url: "/" + window.location.pathname.split("/")[1] + "/formset-data-delete/" + goto_id + "/?next=" + window.location.pathname,
+                url: "/" + window.location.pathname.split("/")[1] + "/formset-data-delete/" + goto_id + "/?next=" + window.location.pathname + window.location.search,
                 error: function () {
                     console.log("error");
                 },

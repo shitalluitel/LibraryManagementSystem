@@ -7,6 +7,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from users.models import User
+# User = settings.AUTH_USER_MODEL
+
 from .forms import (
     RegisterForm,
     LoginForm,
@@ -114,7 +116,6 @@ def user_email_confirm(request):
 
 
 @login_required
-@permission_required('users.change_password')
 def user_password_change(request):
     """
     Change user password

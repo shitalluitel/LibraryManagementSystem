@@ -2,7 +2,10 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth import password_validation
 import re
+
 from .models import User
+#
+# User = settings.AUTH_USER_MODEL
 
 
 class RegisterForm(forms.ModelForm):
@@ -59,7 +62,7 @@ class RegisterForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
-        # user.set_password(self.cleaned_data["password"])
+        user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
         user.send_confirmation_email()
@@ -94,6 +97,7 @@ class LoginForm(forms.Form):
 
         if user:
             return user.email
+
         return None
 
 
@@ -139,8 +143,9 @@ class PasswordChangeForm(forms.Form):
         return confirm_new_password
 
     def save(self, commit=True):
-        password = self.cleaned_data["confirm_new_password"]
+        password = self.cleaned_data["new_password"]
         self.user.set_password(password)
+        # print(self.user)
         if commit:
             self.user.save()
         return self.user

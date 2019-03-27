@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+
+{% block page_name %}
+    Routine
+{% endblock %}
+
+{% block page_description %}
+    List
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'routines:list' %}" class="breadcrumb-item">Routine</a>
+    </li>
+
+    <li>
+        <a href="#" class="breadcrumb-item active">List</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+
+    <div class="box box-primary">
+        <div class="box-header with-border bg-blue" style="color: white;">
+            <h4>Filters</h4>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse" style="color: white;"><i
+                        class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>{{ form.course.label }}</label>
+                            {{ form.course }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>{{ form.batches.label }}</label>
+                            {{ form.batches }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>{{ form.semester.label }}</label>
+                            {{ form.semester }}
+                        </div>
+                    </div>
+                    {% if perms.routines.change_routine %}
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <input type="submit" style="margin-top: 25px;" class="btn btn-success btn-block"
+                                       value="Submit">
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <a style="margin-top: 25px;" class="btn btn-primary btn-block btn-edit"
+                                   href="#">Edit</a>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <a style="margin-top: 25px;" class="btn btn-danger btn-block btn-delete"
+                                   href="#">Delete</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="submit" style="margin-top: 25px;" class="btn btn-success btn-block"
+                                       value="Submit">
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    {#        </div>#}
+    {#    </div>#}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-body">
+
+                    <div class="table-responsive">
+                        <table id="routine-table" class="table form-table table-bordered table-sm">
+                            <thead class="text-center">
+                            <tr>
+                                <th>S.N.</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Teacher</th>
+                                <th>Subject</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in datas %}
+                                <tr class="item">
+                                    <td></td>
+                                    <td>{{ data.day }}</td>
+                                    <td>{{ data.time_from }} - {{ data.time_to }}</td>
+                                    <td>{{ data.teacher }}</td>
+                                    <td>{{ data.subject }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'bower_components/wickedpicker/dist/wickedpicker.min.js' %}"></script>
+    <script>
+        $('body').on('change', '#id_course', function () {
+            var selected_value = $(this).children('option:selected').val();
+            if (selected_value) {
+                $.ajax({
+                    url: '/batches/' + selected_value + "/batch-list/",
+                    cache: false,
+                    error: function () {
+                        console.log("error");
+                    },
+                    success: function (data) {
+                        $('#id_batches').empty().append(data);
+                    },
+                    type: 'GET'
+                });
+            } else {
+                $('#id_batches').html('<option value selected>Select Batch</option>').val('');
+            }
+        });
+
+        $(document).ready(function () {
+            var t = $('#routine-table').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searchable": true,
+            });
+
+            t.on('order.dt search.dt', function () {
+                t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        });
+
+        $('body').on('click', '.btn-edit', function () {
+            var course = $('#id_course').val();
+            var batch = $('#id_batches').val();
+            var sem = $('#id_semester').val();
+
+            if (!course.trim() && !batch.trim() && !sem.trim()) {
+                alert('Please! Select course, batch and semester to edit records.');
+            } else {
+                window.location.assign("{% url 'routines:edit' %}?course=" + course + "&batch=" + batch + "&sem=" + sem);
+            }
+        });
+    </script>
+{% endblock %}
