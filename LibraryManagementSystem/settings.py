@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_adminlte',
     'djangoformsetjs',
     'widget_tweaks',
+    'ckeditor',
 
     'users',
     'students',
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'reports',
     'files',
     'routines',
+    'notices',
 ]
 
 MIDDLEWARE = [
@@ -187,3 +189,28 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+CKEDITOR_JQUERY_URL = os.path.join(STATIC_URL, 'bower_components/jquery/dist/jquery.min.js')
+CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'width': '100%',
+        'indent': False,
+        'toolbar': 'Zinnia',
+        # 'breakBeforeOpen': False,
+        # 'breakAfterOpen': False,
+        # 'breakBeforeClose': False,
+        # 'breakAfterClose': False,
+        # "extraPlugins": 'codesnippet',
+        "codeSnippet_theme": "monokai_sublime",
+        # 'toolbar': [['CodeSnippet', ], ],
+        # 'height': 400,
+        # 'width': 900,
+        # 'removePlugins': 'stylesheetparser',
+        # 'extraPlugins': 'codesnippet'
+    },
+
+}
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
+CKEDITOR_BROWSE_SHOW_DIRS = True

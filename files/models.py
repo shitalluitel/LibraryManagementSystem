@@ -8,7 +8,12 @@ from model_utils import Choices
 
 from LibraryManagementSystem.settings import MEDIA_ROOT
 
-TYPE = Choices('Notice', 'Result', 'Syllabus')
+TYPE = Choices(
+    ('', 'Select Type'),
+    ('Notice', 'Notice'),
+    ('Result', 'Result'),
+    ('Syllabus', 'Syllabus')
+)
 
 
 def get_document_filename(instance, filename):

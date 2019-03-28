@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+{% load calculate_fine %}
+
+{% block page_name %}
+    {{ type }}
+{% endblock %}
+
+{% block page_description %}
+    List
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'files:file_home' %}" class="breadcrumb-item">File</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">{{ type }}</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered my-4">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    फारम ID
+                                </td>
+                                <td>
+                                    {{ data.form_id }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    स्वीकृत
+                                </td>
+                                <td>
+                                    {% if data.is_approved %}
+                                        <h6 class="text-success">भएको</h6>
+                                    {% else %}
+                                        <h6 class="text-danger">नभएको</h6>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <tr class="text-center font-bold font-20">
+                                <td colspan="2">
+                                    आबदेकको विवरण
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>नाम</td>
+                                <td>
+                                    {{ data.applicant_name }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>ठेगाना</td>
+                                <td>
+                                    {{ data.local_body }},
+                                    वडा-{{ data.ward_no | nepaliNumber }}, {{ data.district }}, {{ data.state | nepaliNumber }}-नं
+                                    प्रदेश
+                                </td>
+                            </tr>
+
+                            <tr class="text-center font-bold font-20">
+                                <td colspan="2">
+                                    नाता सम्बन्ध कायम गरेको व्यक्तिको विवरण
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>नाता</td>
+                                <td>
+                                    नाम
+                                </td>
+                            </tr>
+                            {% for detail in details %}
+                                <tr>
+                                    <td>{{ detail.relation }}</td>
+                                    <td>
+                                        {{ detail.name }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            <tr class="text-center font-bold font-20">
+                                <td colspan="2">कागजात</td>
+                            </tr>
+                            <tr>
+                                <td>कागजातहरू</td>
+                                <td>
+                                    {% if files %}
+                                        {% for file in  files %}
+                                            {% if file.document.path|fileExist %}
+                                                <div>
+                                                    <a href="{{ file.document.url }}"
+                                                       target="_blank">{{ file.document|split }}</a>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        नभएको
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <tr class="text-center font-bold font-20">
+                                <td colspan="2">ओ.सी. कागजात</td>
+                            </tr>
+                            <tr>
+                                <td>निबेदन</td>
+                                <td>
+                                    {% if oc_nibedan %}
+                                        {% for file in  oc_nibedan %}
+                                            {% if file.document.path|fileExist %}
+                                                <div>
+                                                    <a href="{{ file.document.url }}"
+                                                       target="_blank">{{ file.document|split }}</a>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        नभएको
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>सिफारिस</td>
+                                <td>
+                                    {% if oc_sifaris %}
+                                        {% for file in  oc_sifaris %}
+                                            {% if file.document.path|fileExist %}
+                                                <div>
+                                                    <a href="{{ file.document.url }}"
+                                                       target="_blank">{{ file.document|split }}</a>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        नभएको
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+    <link rel="stylesheet" href="{% static 'bower_components/datatables.net-dt/css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'bower_components/datatables.net/js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            var t = $('#books-unit-list').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searchable": true,
+                "language": {
+                    "emptyTable": "No any fine."
+                },
+            });
+
+            t.on('order.dt search.dt', function () {
+                t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        });
+
+
+    </script>
+{% endblock %}

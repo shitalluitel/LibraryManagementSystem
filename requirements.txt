@@ -5,12 +5,14 @@ Django==1.11.15
 django-adminlte2==0.4.1
 django-celery-beat==1.4.0
 django-celery-results==1.0.4
+django-ckeditor==5.6.1
 django-crequest==2018.5.11
 django-discover-runner==1.0
 django-environ==0.4.5
 django-formset-js-improved==0.5.0.2
 django-guardian==1.5.0
 django-jquery-js==3.1.1
+django-js-asset==1.2.2
 django-model-utils==3.1.2
 django-role-permissions==2.2.1
 django-timezone-field==3.0

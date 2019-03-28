@@ -1,20 +1,22 @@
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
-from .models import File
+from .models import Notice
 
 
-class FileForm(forms.ModelForm):
+class NoticeForm(forms.ModelForm):
     class Meta:
-        model = File
+        model = Notice
 
         fields = [
-            'document',
+            'notice',
             'title',
             'type'
         ]
 
         widgets = {
             'type': forms.Select(attrs={'class': 'form-control'}),
-            'title': forms.Textarea(attrs={'class': 'form-control', 'rows': 2})
+            'title': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'notice': CKEditorUploadingWidget(),
         }
 
     # def __init__(self, *args, **kwargs):

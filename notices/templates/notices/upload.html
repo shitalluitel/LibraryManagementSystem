@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load formset_tags %}
+{% load static %}
+
+{% block page_name %}
+    Notice
+{% endblock %}
+
+{% block page_description %}
+    Create or Update
+{% endblock %}
+
+{% block breadcrumbLink %}
+    <li>
+        <a href="{% url 'notices:notice_home' %}" class="breadcrumb-item">Notice</a>
+
+    </li>
+    <li>
+        <a href="#" class="breadcrumb-item active">Create</a>
+    </li>
+{% endblock %}
+
+
+{% block body_content %}
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="panel">
+                <div class="panel-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {#                        <div class="row">#}
+                        {#                            <div class="col-md-10 col-md-offset-1">#}
+                        {#                                <div class="panel panel-default">#}
+                        {#                                    <div class="panel-heading text-center">#}
+                        {#                                        <p style="font-size: 18px; font-weight: bold;">Notice</p>#}
+                        {#                                    </div>#}
+                        {#                                    <div class="panel-body">#}
+
+                        {{ form.as_p }}
+
+                        {#                                        <div class="form-group {% if form.notice.errors %} has-error {% endif %}">#}
+                        {#                                            <label class="control-label" for="exampleInputEmail1">{{ form.notice.label }}</label>#}
+                        {#                                            {{ form.notice }}#}
+                        {#                                            {% if form.notice.errors %}#}
+                        {#                                                <span id="helpBlock2"#}
+                        {#                                                      class="help-block">{{ form.text.errors }}</span>#}
+                        {#                                            {% endif %}#}
+                        {#                                        </div>#}
+                        {##}
+                        {#                                        <div class="form-group {% if form.title.errors %} has-error {% endif %}">#}
+                        {#                                            <label class="control-label" for="exampleInputEmail1">{{ form.title.label }}</label>#}
+                        {#                                            {{ form.title }}#}
+                        {#                                            {% if form.title.errors %}#}
+                        {#                                                <span id="helpBlock2"#}
+                        {#                                                      class="help-block">{{ form.title.errors }}</span>#}
+                        {#                                            {% endif %}#}
+                        {#                                        </div>#}
+                        {##}
+                        {#                                        <div class="form-group {% if form.type.errors %} has-error {% endif %}">#}
+                        {#                                            <label class="control-label" for="exampleInputEmail1">{{ form.type.label }}</label>#}
+                        {#                                            {{ form.type }}#}
+                        {#                                            {% if form.type.errors %}#}
+                        {#                                                <span id="helpBlock2"#}
+                        {#                                                      class="help-block">{{ form.type.errors }}</span>#}
+                        {#                                            {% endif %}#}
+                        {#                                        </div>#}
+
+                        <div class="form-group">
+                            <input type="submit" value="Submit" id='submit-btn'
+                                   class="btn btn-primary btn-block">
+                        </div>
+                        {#                                    </div>#}
+                        {#                                </div>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_script %}
+    {#    <script src="{% static 'js/customFormset.js' %}"></script>#}
+
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script>
+        $('body').on('change', '#id_course', function () {
+            var selected_value = $(this).children('option:selected').val();
+            if (selected_value) {
+                $.ajax({
+                    url: '/batches/' + selected_value + "/batch-list/",
+                    cache: false,
+                    error: function () {
+                        console.log("error");
+                    },
+                    success: function (data) {
+                        $('#id_batch').empty().append(data);
+                    },
+                    type: 'GET'
+                });
+            } else {
+                $('#id_batch').html('<option value selected>Select</option>').val('');
+            }
+        });
+    </script>
+{% endblock %}

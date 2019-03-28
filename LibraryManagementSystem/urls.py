@@ -27,10 +27,14 @@ urlpatterns = [
                   url(r'^books/', include('books.urls')),
                   url(r'^borrows/', include('borrows.urls')),
                   url(r'^courses/', include('settings.urls.courses')),
+
+                  url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+
                   url(r'^fines/', include('fines.urls')),
                   url(r'^files/', include('files.urls')),
                   url(r'^get-chart-data/$', display_pie_chart, name='get_chart_data'),
                   url(r'^groups/', include('settings.urls.groups')),
+                  url(r'^notices/', include('notices.urls')),
                   url(r'^reports/', include('reports.urls')),
                   url(r'^routines/', include('routines.urls')),
                   url(r'^settings/', include('settings.urls.settings')),
