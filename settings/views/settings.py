@@ -8,7 +8,7 @@ from settings.models import Setting
 
 
 @login_required
-# @permission_required('settings.add_setting')
+@permission_required('settings.add_setting', raise_exception=True)
 def setting(request):
     context = {}
     try:

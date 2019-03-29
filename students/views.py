@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
-from django.contrib.auth.models import Group
+
 from django.db import IntegrityError, transaction
 from django.forms import modelformset_factory
 from django.shortcuts import render, redirect, reverse
@@ -35,9 +35,6 @@ def create_student(request):
                         student.course_batch = course_batch
                         student.save()
 
-                        user = student.user
-                        group = Group.objects.get(name__iexact='student')
-                        user.groups.add(group)
                     return redirect('students:create_student')
             except IntegrityError():
                 pass
@@ -82,7 +79,7 @@ def json_list_student(request):
 #         data = Student.objects.get()
 
 
-@permission_required('students.view_student')
+@permission_required('students.view_student', raise_exception=True)
 def get_student_option(request):
     context = {}
     batch = request.GET.get('batch')
@@ -94,7 +91,7 @@ def get_student_option(request):
     return render(request, 'snippets/student_option.html', context)
 
 
-@permission_required('students.add_student')
+@permission_required('students.add_student', raise_exception=True)
 def add_student_from_file(request):
     context = {}
     choice_form = CreateChoiceForm(data=request.POST)
@@ -136,6 +133,6 @@ def add_student_from_file(request):
     return render(request, 'students/student_upload_file.html', context)
 
 
-@permission_required('students.add_student')
+@permission_required('students.add_student', raise_exception=True)
 def student_home(request):
     return render(request, 'students/student_home.html')

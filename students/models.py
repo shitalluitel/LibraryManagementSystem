@@ -1,7 +1,7 @@
 from users.models import User
 from django.db import models
 from model_utils import Choices
-
+from django.contrib.auth.models import Group
 from LibraryManagementSystem.validatiors import phone_no_validation
 
 # Create your models here.
@@ -55,6 +55,9 @@ class Student(models.Model):
                     last_name=self.name.split(' ')[-1] or None)
 
         user.save()
+
+        group = Group.objects.get(name__iexact='student')
+        user.groups.add(group)
 
         self.user = user
         super().save(*args, **kwargs)

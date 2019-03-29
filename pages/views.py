@@ -24,13 +24,15 @@ def home_page(request):
         return staff_dashboard(request=request)
 
 
+@login_required
 def student_dashboard(request):
     user = request.user
     student = user.student
     context = {}
     total_fine = 0
 
-    remaining_fine = student.fine
+    fine, created = Fine.objects.get_or_create(student=student)
+    remaining_fine = fine.amount
     borrowed_books = student.borrows.filter(status='approved')
     borrow_history = student.borrows.filter(status='returned')[:5]
 
@@ -56,6 +58,7 @@ def student_dashboard(request):
     return render(request, 'pages/_student_dashboard.html', context)
 
 
+@login_required
 def staff_dashboard(request):
     user = request.user
     context = {}

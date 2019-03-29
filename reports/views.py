@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -7,10 +8,12 @@ from borrows.models import Borrow
 from reports.forms import BookReportForm, StudentReportForm
 
 
+@permission_required('reports.view_report', raise_exception=True)
 def report_home(request):
     return render(request, 'reports/report_home.html')
 
 
+@permission_required('reports.view_report', raise_exception=True)
 def book_order_report(request):
     context = {}
     form = BookReportForm(data=request.POST or None)
@@ -45,6 +48,7 @@ def book_order_report(request):
     return render(request, 'reports/book_order_report.html', context)
 
 
+@permission_required('reports.view_report', raise_exception=True)
 def student_report(request):
     context = {}
     forms = StudentReportForm(request.POST or None)
@@ -78,6 +82,7 @@ def student_report(request):
     return render(request, 'reports/student_report.html', context)
 
 
+@permission_required('reports.view_report', raise_exception=True)
 def export_pdf(request):
     context = {}
     type_of_pdf = request.GET.get('type')

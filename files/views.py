@@ -7,7 +7,7 @@ from files.forms import FileForm
 from files.models import File
 
 
-# @permission_required('files.add_file')
+@permission_required('files.add_file', raise_exception=True)
 def file_upload(request):
     context = {}
     form = FileForm()
@@ -23,11 +23,12 @@ def file_upload(request):
     return render(request, 'files/upload.html', context)
 
 
-# @permission_required('files.add_file')
+@login_required
 def file_home(request):
     return render(request, 'files/file_home.html')
 
 
+@login_required
 def file_list(request):
     context = {}
 
@@ -41,6 +42,7 @@ def file_list(request):
     return render(request, 'files/file_list.html', context)
 
 
+@permission_required('files.delete_file', raise_exception=True)
 def file_delete(request, pk):
     next = request.GET.get('next')
 

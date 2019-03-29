@@ -10,7 +10,6 @@ from LibraryManagementSystem.settings import MEDIA_ROOT
 
 TYPE = Choices(
     ('', 'Select Type'),
-    ('Notice', 'Notice'),
     ('Result', 'Result'),
     ('Syllabus', 'Syllabus')
 )

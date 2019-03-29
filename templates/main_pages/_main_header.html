@@ -60,16 +60,11 @@
                             <!-- Menu Footer-->
                             {% block menu_footer %}
                                 <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="
-
-
-
-
-
-                                                {% block change_password_url %}{% url 'admin:password_change' %}{% endblock %}"
-                                           class="btn btn-default btn-flat">{% trans 'Change password' %}</a>
-                                    </div>
+{#                                    <div class="pull-left">#}
+{#                                        <a href="#}
+{#                                                {% block change_password_url %}{% url 'admin:password_change' %}{% endblock %}"#}
+{#                                           class="btn btn-default btn-flat">{% trans 'Change password' %}</a>#}
+{#                                    </div>#}
                                     <div class="pull-right">
                                         <a href="{% url 'users:logout_user' %}"
                                            class="btn btn-default btn-flat">Sign out</a>

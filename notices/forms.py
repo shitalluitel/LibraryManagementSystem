@@ -8,13 +8,14 @@ class NoticeForm(forms.ModelForm):
         model = Notice
 
         fields = [
-            'notice',
             'title',
-            'type'
+            'notice',
+
+            # 'type'
         ]
 
         widgets = {
-            'type': forms.Select(attrs={'class': 'form-control'}),
+            # 'type': forms.Select(attrs={'class': 'form-control'}),
             'title': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'notice': CKEditorUploadingWidget(),
         }

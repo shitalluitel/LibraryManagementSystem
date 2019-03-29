@@ -11,8 +11,7 @@ from fines.models import Fine
 from students.models import Student
 
 
-@login_required
-@permission_required('fines.change_fine')
+@permission_required('fines.change_fine', raise_exception=True)
 def get_student_fine(request):
     context = {}
     student_form = FineStudentForm(request.POST or None)
@@ -26,7 +25,7 @@ def get_student_fine(request):
     return render(request, 'fines/get_student_fine.html', context)
 
 
-@permission_required('fines.change_fine')
+@permission_required('fines.change_fine', raise_exception=True)
 def pay_fine(request, roll_no):
     context = {}
     try:
@@ -63,7 +62,6 @@ def pay_fine(request, roll_no):
 
 
 @login_required
-# @permission_required('fines.view_fine')
 def list_fine(request):
     context = {}
     borrows = Borrow.objects.filter(status='approved')

@@ -201,7 +201,7 @@ CKEDITOR_CONFIGS = {
         # 'breakAfterOpen': False,
         # 'breakBeforeClose': False,
         # 'breakAfterClose': False,
-        # "extraPlugins": 'codesnippet',
+        "extraPlugins": 'codesnippet',
         "codeSnippet_theme": "monokai_sublime",
         # 'toolbar': [['CodeSnippet', ], ],
         # 'height': 400,

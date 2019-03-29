@@ -12,7 +12,7 @@ from notices.forms import NoticeForm
 from notices.models import Notice
 
 
-# @permission_required('notices.add_notice')
+@permission_required('notices.add_notice', raise_exception=True)
 def notice_upload(request):
     context = {}
     form = NoticeForm()
@@ -28,6 +28,7 @@ def notice_upload(request):
     return render(request, 'notices/upload.html', context)
 
 
+@permission_required('notices.change_notice', raise_exception=True)
 def notice_update(request, pk):
     context = {}
     next = request.GET.get('next')
@@ -51,18 +52,19 @@ def notice_update(request, pk):
     return render(request, 'notices/upload.html', context)
 
 
-# @permission_required('notices.add_notice')
+@login_required
 def notice_home(request):
     return render(request, 'notices/notice_home.html')
 
 
+@login_required
 def notice_list(request):
     context = {}
 
-    type = request.GET.get('type')
-    type = type.capitalize()
+    # type = request.GET.get('type')
+    # type = type.capitalize()
 
-    notice = Notice.objects.filter(type=type, is_deleted=False)
+    notice = Notice.objects.filter(is_deleted=False)
 
     context['datas'] = notice
     context['type'] = type
@@ -71,6 +73,7 @@ def notice_list(request):
     return render(request, 'notices/notice_list.html', context)
 
 
+@permission_required('notices.delete_notice', raise_exception=True)
 def notice_delete(request, pk):
     next = request.GET.get('next')
 
@@ -84,6 +87,7 @@ def notice_delete(request, pk):
     return redirect(next)
 
 
+@login_required
 def notice_detail(request, pk):
     next = request.GET.get('next')
 

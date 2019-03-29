@@ -20,34 +20,51 @@
     </li>
 {% endif %}
 
-{% if perms.books.view_books %}
-    <li class="treeview">
-        <a href="#">
-            <i class="fa fa-book"></i>
-            <span>Book</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-            <li><a href="{% url 'books:book_list' %}"><i class="fa fa-circle-o"></i> List</a></li>
-            {% if perms.books.delete_book %}
-                <li><a href="{% url 'books:book_trash' %}"><i class="fa fa-circle-o"></i> Trash</a></li>
-            {% endif %}
-        </ul>
-    </li>
-{% endif %}
 
 <li class="treeview">
     <a href="#">
-        <i class="fa fa-file-pdf-o"></i>
+        <i class="fa fa-book"></i>
+        <span>Book</span>
+        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+    </a>
+    <ul class="treeview-menu">
+        <li><a href="{% url 'books:book_list' %}"><i class="fa fa-circle-o"></i> List</a></li>
+        {% if perms.books.delete_book %}
+            <li><a href="{% url 'books:book_trash' %}"><i class="fa fa-circle-o"></i> Trash</a></li>
+        {% endif %}
+    </ul>
+</li>
+
+
+<li class="treeview">
+    <a href="#">
+        <i class="fa fa-bell"></i>
         <span>Notice</span>
         <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
     </a>
     <ul class="treeview-menu">
-        {% if perms.file.add_file %}
+        {% if perms.notices.add_notice %}
+            <li><a href="{% url 'notices:notice_upload' %}"><i class="fa fa-circle-o"></i> Create</a></li>
+        {% endif %}
+        <li><a href="{% url 'notices:notice_list' %}"><i class="fa fa-circle-o"></i> List</a></li>
+
+    </ul>
+</li>
+
+<li class="treeview">
+    <a href="#">
+        <i class="fa fa-file-pdf-o"></i>
+        <span>Routine / Syllabus</span>
+        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+    </a>
+    <ul class="treeview-menu">
+        {% if perms.files.add_file %}
             <li><a href="{% url 'files:file_upload' %}"><i class="fa fa-circle-o"></i> Create</a></li>
         {% endif %}
         <li><a href="{% url 'files:file_home' %}"><i class="fa fa-circle-o"></i> Home</a></li>

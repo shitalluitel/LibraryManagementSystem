@@ -1,6 +1,7 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required, login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction, IntegrityError
 from django.db.models import Q
@@ -11,6 +12,7 @@ from settings.models import Batch, CourseBatch
 from settings.forms import BatchForm, CourseBatchCreateForm
 
 
+@permission_required('settings.add_batch', raise_exception=True)
 def create(request):
     context = {}
     form = BatchForm(request.POST or None)
@@ -30,6 +32,7 @@ def create(request):
     return render(request, 'batches/create.html', context)
 
 
+@permission_required('settings.add_batch', raise_exception=True)
 def create_json(request):
     context = {}
     form = BatchForm(None)
@@ -50,6 +53,7 @@ def create_json(request):
     return render(request, 'batches/_form.html', context)
 
 
+@permission_required('settings.add_batch', raise_exception=True)
 def edit(request, pk):
     context = {}
     try:
@@ -70,6 +74,7 @@ def edit(request, pk):
     return render(request, 'batches/create.html', context)
 
 
+@login_required
 def list(request):
     # context = {}
     # datas = Batch.objects.all()
@@ -77,6 +82,7 @@ def list(request):
     return render(request, 'batches/list.html')
 
 
+@login_required
 def json_list(request):
     datas = Batch.objects.all()
 
@@ -108,6 +114,7 @@ def json_list(request):
     return HttpResponse(json_datas, content_type='application/json', status=200)
 
 
+@permission_required('settings.add_batch', raise_exception=True)
 def delete(request, pk):
     context = {}
     if request.method == "POST":
@@ -128,6 +135,7 @@ def delete(request, pk):
     return render(request, 'snippets/delete.html', context)
 
 
+@permission_required('settings.add_coursebatch', raise_exception=True)
 def create_course_batch(request, pk):
     form = CourseBatchCreateForm(request.POST or None)
     if request.method == "POST":
@@ -147,6 +155,7 @@ def create_course_batch(request, pk):
     return render(request, 'batches/course_batch_create.html', {'form': form})
 
 
+@login_required
 def get_batch_list(request, pk):
     batch = Batch.objects.filter(course__id=pk)
     empty_label = "Select Batch"

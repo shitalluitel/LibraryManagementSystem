@@ -1,6 +1,7 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required, login_required
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
@@ -8,6 +9,7 @@ from settings.models import Course
 from settings.forms import CourseForm
 
 
+@permission_required('settings.add_course', raise_exception=True)
 def create(request):
     context = {}
     form = CourseForm(request.POST or None)
@@ -22,6 +24,7 @@ def create(request):
     return render(request, 'courses/create.html', context)
 
 
+@permission_required('settings.add_course', raise_exception=True)
 def create_json(request):
     context = {}
     form = CourseForm(None)
@@ -37,6 +40,7 @@ def create_json(request):
     return render(request, 'courses/_form.html', context)
 
 
+@permission_required('settings.change_course', raise_exception=True)
 def edit(request, pk):
     context = {}
     try:
@@ -57,6 +61,7 @@ def edit(request, pk):
     return render(request, 'courses/create.html', context)
 
 
+@login_required
 def list(request):
     context = {}
     datas = Course.objects.all()
@@ -64,6 +69,7 @@ def list(request):
     return render(request, 'courses/list.html', context)
 
 
+@login_required
 def json_list(request):
     datas = Course.objects.all()
 
@@ -95,6 +101,7 @@ def json_list(request):
     return HttpResponse(json_datas, content_type='application/json', status=200)
 
 
+@permission_required('settings.delete_course', raise_exception=True)
 def delete(request, pk):
     context = {}
     if request.method == "POST":

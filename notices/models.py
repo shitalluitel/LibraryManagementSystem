@@ -16,7 +16,7 @@ class Notice(models.Model):
     notice = RichTextUploadingField('text')
 
     title = models.TextField(max_length=512)
-    type = models.CharField(max_length=16, choices=TYPE)
+    # type = models.CharField(max_length=16, choices=TYPE)
 
     is_deleted = models.BooleanField(default=False)
 

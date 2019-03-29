@@ -9,5 +9,4 @@ urlpatterns = [
     url(r'^list/$', views.routine_list, name="list"),
     url(r'^delete/$', views.routine_delete, name="delete"),
     url(r'^formset-data-delete/(?P<pk>\d+)/$', views.unit_routine_delete, name="unit_routine_delete"),
-
 ]

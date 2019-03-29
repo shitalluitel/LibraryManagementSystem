@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required, login_required
 from django.db import transaction, IntegrityError
 from django.forms import modelformset_factory
 from django.http import HttpResponse
@@ -9,6 +10,7 @@ from routines.forms import RoutineDataForm, RoutineCourseBatchForm
 from routines.models import Routine
 
 
+@permission_required('routines.add_routine', raise_exception=True)
 def routine_create(request):
     context = {}
 
@@ -45,6 +47,7 @@ def routine_create(request):
     return render(request, 'routines/create.html', context)
 
 
+@login_required
 def routine_list(request):
     context = {}
     form = RoutineCourseBatchForm(request.POST or None)
@@ -64,6 +67,7 @@ def routine_list(request):
     return render(request, 'routines/list.html', context)
 
 
+@permission_required('routines.change_routine', raise_exception=True)
 def routine_edit(request):
     context = {}
 
@@ -131,6 +135,7 @@ def routine_edit(request):
     return render(request, 'routines/edit.html', context)
 
 
+@permission_required('routines.delete_routine', raise_exception=True)
 def routine_delete(request):
     context = {}
 
@@ -152,6 +157,7 @@ def routine_delete(request):
     return redirect('routines:list')
 
 
+@permission_required('routines.delete_routine', raise_exception=True)
 def unit_routine_delete(request, pk):
     next = request.GET.get('next')
     try:

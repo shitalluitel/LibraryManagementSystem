@@ -41,3 +41,6 @@ urlpatterns = [
                   url(r'^students/', include('students.urls')),
                   url(r'^users/', include('users.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'LibraryManagementSystem.views.handler404'
+handler500 = 'LibraryManagementSystem.views.handler500'
