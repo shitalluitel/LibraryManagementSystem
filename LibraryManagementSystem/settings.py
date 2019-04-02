@@ -25,8 +25,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 try:
     env.read_env(os.path.join(BASE_DIR, '.env'))
-except:
-    pass
+except Exception as e:
+    print(e)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django.contrib.sites',
 
     'django_celery_beat',
     'django_celery_results',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'djangoformsetjs',
     'widget_tweaks',
     'ckeditor',
+    'notifications',
 
     'users',
     'students',
@@ -63,7 +65,6 @@ INSTALLED_APPS = [
     'borrows',
     'fines',
     'pages',
-    'notifications',
     'reports',
     'files',
     'routines',
@@ -211,6 +212,18 @@ CKEDITOR_CONFIGS = {
     },
 
 }
+
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
 CKEDITOR_BROWSE_SHOW_DIRS = True
+
+# PUSH_NOTIFICATIONS_SETTINGS = {
+#     "FCM_API_KEY": "[your api key]",
+#     "GCM_API_KEY": "[your api key]",
+#     "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
+#     "APNS_TOPIC": "com.example.push_test",
+#     "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
+#     "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
+#     "WP_PRIVATE_KEY": "/path/to/your/private.pem",
+#     "WP_CLAIMS": {'sub': "mailto: development@example.com"}
+# }

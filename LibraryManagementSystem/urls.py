@@ -34,6 +34,9 @@ urlpatterns = [
                   url(r'^files/', include('files.urls')),
                   url(r'^get-chart-data/$', display_pie_chart, name='get_chart_data'),
                   url(r'^groups/', include('settings.urls.groups')),
+
+                  url('^inbox/notifications/', include('notifications.urls', namespace='notifications')),
+
                   url(r'^notices/', include('notices.urls')),
                   url(r'^reports/', include('reports.urls')),
                   url(r'^routines/', include('routines.urls')),

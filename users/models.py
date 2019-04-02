@@ -41,7 +41,8 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_admin = True
         user.is_superuser = True
-        user.save(using=self._db)
+
+        user.save()
 
         return user
 
@@ -80,14 +81,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     def save(self, *args, **kwargs):
-        self.set_password(self.password)
-        return super().save(*args, **kwargs)
+        password = self.password
+        if not 'pbkdf2_sha256' in password:
+            self.set_password(self.password)
+        return super(User, self).save(*args, **kwargs)
 
     def get_full_name(self):
         return ' '.join([self.first_name, self.last_name])
 
     def get_short_name(self):
         return self.first_name
+
+    def date_joined(self):
+        # return 'shital'
+        return self.created_at.date()
 
     def __str__(self):  # __unicode__ on Python 2
         return self.email

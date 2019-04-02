@@ -2,12 +2,15 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.models import Group, User
 from django.db import transaction
 from django.db.models import Q, Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from datetime import datetime
 # Create your views here.
+from notifications.signals import notify
+
 from books.models import BookUnit
 from borrows.forms import SelectStudentForm, AssignBookForm
 from borrows.models import Borrow
@@ -37,6 +40,13 @@ def order_bookunit(request, pk):
             borrow.book_unit = data
             borrow.status = 'pending'
             borrow.save()
+
+            group = Group.objects.get(name__icontains='staff')
+
+            notify.send(sender=request.user, recipient=group,
+                        verb='Book order by ' + request.user.get_full_name(),
+                        description="Book with Acc. No. {} has been ordered by {}.".format(data.acc_no,
+                                                                                           request.user.get_full_name()))
 
             return redirect("books:list_book_unit", pk=data.book.id)
 
@@ -107,7 +117,12 @@ def cancel_request(request, pk):
     book.status = 'available'
     book.save()
 
-    messages.success(request, 'Successfully assigned')
+    notify.send(sender=request.user, recipient=data.student.user,
+                verb='Book order cancelled',
+                description="Your Order of book with Acc. No. {} has been cancelled by {}.".format(data.book_unit.acc_no,
+                                                                                                   request.user.get_full_name()))
+
+    messages.success(request, 'Successfully cancelled')
     return redirect('borrows:list_borrow')
 
 

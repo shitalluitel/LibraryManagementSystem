@@ -1,0 +1,1 @@
+[{"model": "notices.notice", "pk": 1, "fields": {"notice": "<p>This is to notify all the student that all the classes will remain close on 20th sep 2018.</p>", "title": "Holiday Notice", "is_deleted": false, "timestamp": "2019-03-28", "updated_at": "2019-03-28"}}]

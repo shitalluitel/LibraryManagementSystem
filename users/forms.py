@@ -64,6 +64,7 @@ class RegisterForm(forms.ModelForm):
         user = super(RegisterForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:
+            # self.set_password(self.password)
             user.save()
         user.send_confirmation_email()
         return user

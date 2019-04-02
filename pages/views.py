@@ -73,3 +73,25 @@ def staff_dashboard(request):
     context['total_fine'] = total_fine
     context['borrowed_books'] = ordered_book_list
     return render(request, 'pages/_staff_dashboard.html', context)
+
+
+@login_required
+def notification_list(request):
+    context = {}
+    user = request.user
+    notifications = user.notifications.all()
+
+    context['notifications'] = notifications
+
+    return render(request, 'pages/notification_list.html', context)
+
+
+@login_required
+def mark_all_as_read(request):
+    context = {}
+    user = request.user
+    notifications = user.notifications.all()
+
+    notifications.mark_all_as_read()
+
+    return redirect('notification_list')

@@ -1,6 +1,6 @@
 {% extends 'adminlte/base.html' %}
 {% load staticfiles %}
-
+{% load notifications_tags %}
 
 {% block title %}Library Management System{% endblock %}
 
@@ -85,6 +85,17 @@
         $.widget.bridge('uibutton', $.ui.button);
     </script>
     <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %} "></script>
+    <script src="{% static 'js/notify.js' %}" type="text/javascript"></script>
+    {% register_notify_callbacks menu_class="menu" callbacks='fill_notification_list,fill_notification_badge' %}
+
+{#    <script>#}
+{#        function my_special_notification_callback(data) {#}
+{#            for (var i = 0; i < data.unread_list.length; i++) {#}
+{#                msg = data.unread_list[i];#}
+{#                console.log(msg);#}
+{#            }#}
+{#        }#}
+{#    </script>#}
     <script src="{% static 'admin-lte/dist/js/app.min.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
 {% endblock %}

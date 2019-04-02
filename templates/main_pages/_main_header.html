@@ -1,6 +1,7 @@
 {% extends 'adminlte/lib/_main_header.html' %}
 {% load adminlte_helpers i18n %}
 {% load staticfiles %}
+{% load notifications_tags %}
 
 {% block logo_text %}Library Management{% endblock %}
 
@@ -15,30 +16,19 @@
                         <!-- Menu toggle button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-bell-o"></i>
-                            {% with notifications=request.user.notifications.count %}
-                                <span class="label label-warning">{{ notifications }}</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="header">You have {{ notifications }} notifications
-                                    </li>
-                                    {% for data in request.user.notifications.all %}
-                                        <li>
-                                            <!-- Inner Menu: contains the notifications -->
-                                            <ul class="menu">
-                                                <li>
-                                                    <!-- start notification -->
-                                                    <a href="#">
-                                                        <i class="fa fa-circle text-aqua"></i> {{ data.message }}
-                                                    </a>
-                                                </li>
-                                                <!-- end notification -->
-                                            </ul>
-                                        </li>
-                                    {% endfor %}
+                            <span class="label label-warning">{% live_notify_badge %}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">
+                                You have <strong>{% live_notify_badge %}</strong> unread notifications.
+                            </li>
+                            <li>
+                                {% live_notify_list list_class="menu" %}
+                            </li>
 
-                                    <li class="footer"><a href="#">View all</a></li>
-                                </ul>
-                            {% endwith %}
+
+                            <li class="footer"><a href="{% url 'notification_list' %}">View all</a></li>
+                        </ul>
                     </li>
 
                     <li class="dropdown user user-menu">
@@ -54,17 +44,20 @@
                                         {% firstof request.user.get_short_name request.user.get_username %}
                                         <small>Member since {{ request.user.date_joined }}</small>
                                     </p>
+
                                 </li>
+
                             {% endblock %}
 
                             <!-- Menu Footer-->
                             {% block menu_footer %}
                                 <li class="user-footer">
-{#                                    <div class="pull-left">#}
-{#                                        <a href="#}
-{#                                                {% block change_password_url %}{% url 'admin:password_change' %}{% endblock %}"#}
-{#                                           class="btn btn-default btn-flat">{% trans 'Change password' %}</a>#}
-{#                                    </div>#}
+                                    <div class="pull-left">
+                                        <a href="{% block change_password_url %}
+{% url 'users:user_password_change' %}
+{% endblock %}"
+                                           class="btn btn-default btn-flat">{% trans 'Change password' %}</a>
+                                    </div>
                                     <div class="pull-right">
                                         <a href="{% url 'users:logout_user' %}"
                                            class="btn btn-default btn-flat">Sign out</a>
