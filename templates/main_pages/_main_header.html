@@ -20,7 +20,16 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">
-                                You have <strong>{% live_notify_badge %}</strong> unread notifications.
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Notifications <strong>{% live_notify_badge %}</strong>
+                                    </div>
+                                    <div class="col-sm-6 text-right">
+                                        <a href="{% url 'notifications:mark_all_as_read' %}?next={% url 'notification_list' %}">
+                                            <small>Mark All as Read</small>
+                                        </a>
+                                    </div>
+                                </div>
                             </li>
                             <li>
                                 {% live_notify_list list_class="menu" %}

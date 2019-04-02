@@ -1,4 +1,5 @@
 {% load has_group %}
+{% load notifications_tags %}
 
 {% if perms.students.add_student or perms.students.view_student %}
     <li class="treeview">
@@ -58,7 +59,7 @@
 <li class="treeview">
     <a href="#">
         <i class="fa fa-file-pdf-o"></i>
-        <span>Routine / Syllabus</span>
+        <span>Result / Syllabus</span>
         <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -191,7 +192,7 @@
             <i class="fa fa-bell"></i>
             <span>Book Request</span>
             <span class="pull-right-container">
-            <small class="label pull-right bg-yellow">10</small>
+            <small class="label pull-right bg-yellow">{% live_notify_badge %}</small>
         </span>
         </a>
     </li>

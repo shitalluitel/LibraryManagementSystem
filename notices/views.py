@@ -2,11 +2,13 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
+from notifications.signals import notify
 
 from notices.forms import NoticeForm
 from notices.models import Notice
@@ -21,6 +23,13 @@ def notice_upload(request):
         if form.is_valid():
             notice = form.save(commit=False)
             notice.save()
+
+            group = Group.objects.get(name__icontains='student')
+
+            notify.send(sender=request.user, recipient=group,
+                        verb=notice.title,
+                        description=notice.title
+                        )
 
             messages.success(request, "Successfully uploaded notice.")
             return redirect('notices:notice_upload')

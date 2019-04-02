@@ -1,11 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.models import Group
 from django.db import transaction, IntegrityError
 from django.forms import modelformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from notifications.signals import notify
+
 from routines.forms import RoutineDataForm, RoutineCourseBatchForm
 from routines.models import Routine
 
@@ -30,11 +33,17 @@ def routine_create(request):
 
                     for data in form.forms:
                         routine = data.save(commit=False)
-                        print(routine.time_from)
                         routine.course = course
                         routine.batches = batch
                         routine.semester = sem
                         routine.save()
+
+                        group = Group.objects.get(name__icontains='student')
+
+                        notify.send(sender=request.user, recipient=group,
+                                    verb='Routine for {} semester.'.format(routine.semester),
+                                    description="Check the routine for Routine for {} {} semester {}.".format(
+                                        routine.course, routine.batches, routine.semester))
 
                     messages.success(request, 'Successfully created routine.')
                     return redirect('routines:create')

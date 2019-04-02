@@ -95,6 +95,12 @@ def assign_borrow_bookunit(request, pk):
     book.status = 'booked'
     book.save()
 
+    notify.send(sender=request.user, recipient=data.student.user,
+                verb='Book request accepted',
+                description="Your request for book with Acc. No. {} has been accepeted by {}.".format(
+                    data.book_unit.acc_no,
+                    request.user.get_full_name()))
+
     messages.success(request, 'Successfully approved book unit {} to {}.'.format(book.book_code, data.student))
     return redirect('borrows:list_borrow')
 
@@ -118,9 +124,10 @@ def cancel_request(request, pk):
     book.save()
 
     notify.send(sender=request.user, recipient=data.student.user,
-                verb='Book order cancelled',
-                description="Your Order of book with Acc. No. {} has been cancelled by {}.".format(data.book_unit.acc_no,
-                                                                                                   request.user.get_full_name()))
+                verb='Book request cancelled',
+                description="Your request for book with Acc. No. {} has been cancelled by {}.".format(
+                    data.book_unit.acc_no,
+                    request.user.get_full_name()))
 
     messages.success(request, 'Successfully cancelled')
     return redirect('borrows:list_borrow')
