@@ -28,6 +28,7 @@
                         <table id="books-unit-list" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
+                                <th>S.N.</th>
                                 <th>Student</th>
                                 <th>Book</th>
                                 {% if approved %}
@@ -42,6 +43,7 @@
                             <tbody>
                             {% for data in datas %}
                                 <tr>
+                                    <td></td>
                                     <td>{{ data.student.name }}</td>
                                     <td>
                                         {{ data.book_unit }}

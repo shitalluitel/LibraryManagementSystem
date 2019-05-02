@@ -10,7 +10,7 @@ register = template.Library()
 
 
 @register.filter(name='calculate_fine')
-def has_group(id):
+def calculate_fine(id):
     try:
         data = Borrow.objects.get(id=id)
     except Borrow.DoesNotExist:
@@ -30,5 +30,8 @@ def has_group(id):
 
     if fine_days > 0:
         total_fine = fine_days * fine_amount
+
+    print("User: {}, issued date: {} , fine: {}, fine days: {}, today: {}".format(data.student.name, data.issued_date,
+                                                                                  total_fine, fine_days, today))
 
     return total_fine

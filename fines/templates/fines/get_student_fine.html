@@ -4,20 +4,20 @@
 {% load formset_tags %}
 
 {% block page_name %}
-    Book
+    Fine
 {% endblock %}
 
 {% block page_description %}
-    Assign
+    Pay
 {% endblock %}
 
 {% block breadcrumbLink %}
     <li>
-        <a href="{% url 'books:book_list' %}" class="breadcrumb-item">Books</a>
+        <a href="{% url 'home' %}" class="breadcrumb-item">Fine</a>
 
     </li>
     <li>
-        <a href="#" class="breadcrumb-item active">Assign</a>
+        <a href="#" class="breadcrumb-item active">Pay</a>
     </li>
 {% endblock %}
 
@@ -33,8 +33,8 @@
 
                             <div class="col-md-6 col-md-offset-3">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <p style="font-weight: bold; font-size: 18px;">Student Detail</p>
+                                    <div class="panel-heading text-center">
+                                        <p style="font-weight: bold; font-size: 18px;">Find Student</p>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group {% if student_form.student.errors %} has-error {% endif %}">
