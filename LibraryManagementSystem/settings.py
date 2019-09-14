@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 import environ
 from django.contrib import messages
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'ckeditor',
     'notifications',
+    # 'rest_framework_simplejwt',
 
     'users',
     'students',
@@ -70,7 +72,6 @@ INSTALLED_APPS = [
     'routines',
     'notices',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -199,17 +200,8 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
         'indent': False,
         'toolbar': 'Zinnia',
-        # 'breakBeforeOpen': False,
-        # 'breakAfterOpen': False,
-        # 'breakBeforeClose': False,
-        # 'breakAfterClose': False,
         "extraPlugins": 'codesnippet',
         "codeSnippet_theme": "monokai_sublime",
-        # 'toolbar': [['CodeSnippet', ], ],
-        # 'height': 400,
-        # 'width': 900,
-        # 'removePlugins': 'stylesheetparser',
-        # 'extraPlugins': 'codesnippet'
     },
 
 }
@@ -218,13 +210,38 @@ CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
 CKEDITOR_BROWSE_SHOW_DIRS = True
 
-# PUSH_NOTIFICATIONS_SETTINGS = {
-#     "FCM_API_KEY": "[your api key]",
-#     "GCM_API_KEY": "[your api key]",
-#     "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
-#     "APNS_TOPIC": "com.example.push_test",
-#     "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
-#     "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
-#     "WP_PRIVATE_KEY": "/path/to/your/private.pem",
-#     "WP_CLAIMS": {'sub': "mailto: development@example.com"}
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
