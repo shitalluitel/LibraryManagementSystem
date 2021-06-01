@@ -50,6 +50,6 @@ redis==3.2.0
 requests==2.21.0
 whitenoise==5.0.1
 six==1.12.0
-urllib3==1.24.2
+urllib3==1.26.5
 vine==1.2.0
 gunicorn==20.0.4 
