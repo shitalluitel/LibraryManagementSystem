@@ -10,7 +10,7 @@ cryptography==2.6.1
 Django==1.11.29
 django-adminlte2==0.4.1
 django-celery-beat==1.4.0
-django-celery-results==1.0.4
+django-celery-results==2.4.0
 django-ckeditor==5.6.1
 django-crequest==2018.5.11
 django-discover-runner==1.0
